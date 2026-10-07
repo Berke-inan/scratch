@@ -1,0 +1,1607 @@
+[
+  {
+    "categoryName": "Kahvaltılıklar",
+    "icon": "🍳",
+    "products": [
+      {
+        "name": "Rahat Serpme Kahvaltı",
+        "desc": "Beyaz Peynir, Cherry Domates, Salatalık, Tereyağ, Bal-Kaymak, Yeşil Zeytin, Siyah Zeytin, Chokella, Salam, Sucuk, Dana Jambon, Kaşar Peyniri, Krem Peynir, Çeçil Peyniri, Eski Kaşar, Misket Peynir, Burgu Peynir, Izgara Hellim Peyniri, Kokteyl Sosis, Ceviz, Taze Meyve, Gözleme, Pişi, Göz Yumurta, Kuru İncir, İncir Reçeli, Ahududu Reçeli, Vişne Reçelli Lor Peyniri, Acuka, French Fries, Acuka ve Sınırsız Çay",
+        "price": 540,
+        "tags": [
+          "Süt Ürünü İçerir",
+          "Sağlıklı Seçim"
+        ]
+      },
+      {
+        "name": "Kahvaltı Tabağı",
+        "desc": "Beyaz Peynir, Kaşar Peyniri, Dana Jambon, Salam, Siyah Zeytin, Cherry Domates, Salatalık, Krem Peynir, Bal Tereyağ, Reçel, Taze Meyve, Kalem Börek, Tek Yumurtadan Omlet, Burgu, Çeçil, Misket Peynir ve Sınırsız Çay",
+        "price": 300,
+        "tags": [
+          "Süt Ürünü İçerir",
+          "Sağlıklı Seçim"
+        ]
+      },
+      {
+        "name": "Sıcak Kahvaltı Tabağı",
+        "desc": "Izgara Sucuk, Izgara Hellim Peyniri, Mini Sosis, Domates, Salatalık, Roka, Yumurta, Gözleme ve Sınırsız Çay",
+        "price": 300,
+        "tags": [
+          "Süt Ürünü İçerir",
+          "Sağlıklı Seçim"
+        ]
+      },
+      {
+        "name": "Simit Panne",
+        "desc": "Simit, Krem Peynir, Zeytin Ezmesi, Kaşar Peyniri, Akdeniz Yeşilliği, Cherry Domates, Salatalık ve Zeytin Çeşitleri",
+        "price": 220,
+        "tags": [
+          "Süt Ürünü İçerir",
+          "Sağlıklı Seçim"
+        ]
+      },
+      {
+        "name": "Menemen",
+        "desc": "Yumurta, Domates, Biber",
+        "price": 170,
+        "tags": []
+      },
+      {
+        "name": "Sahanda Sucuklu Yumurta",
+        "desc": "Yumurta, Tereyağı, Sucuk",
+        "price": 170,
+        "tags": []
+      },
+      {
+        "name": "Sahanda Yumurta",
+        "desc": "Yumurta, Tereyağı",
+        "price": 220,
+        "tags": []
+      },
+      {
+        "name": "Kavurmalı Yumurta",
+        "desc": "Yumurta, Tereyağı, Kavurma",
+        "price": 210,
+        "tags": []
+      },
+      {
+        "name": "Avocadolu Poşe Yumurta",
+        "desc": "Avacado, Yumurta ve Yeşillik Eşliğinde",
+        "price": 210,
+        "tags": []
+      },
+      {
+        "name": "Gözleme",
+        "desc": "Peynirli Gözleme, Akdeniz Yeşilliği, Cherry Domates, Salatalık ve Zeytin Çeşitleri",
+        "price": 180,
+        "tags": [
+          "Süt Ürünü İçerir",
+          "Sağlıklı Seçim"
+        ]
+      },
+      {
+        "name": "Bazlama",
+        "desc": "Beyaz Peynir, Domates, Akdeniz Yeşilliği, Cherry Domates, Salatalık ve Zeytin Çeşitleri",
+        "price": 180,
+        "tags": [
+          "Süt Ürünü İçerir",
+          "Sağlıklı Seçim"
+        ]
+      },
+      {
+        "name": "Pişi 2 Adet",
+        "desc": "Pişi, Akdeniz Yeşilliği, Cherry Domates, Salatalık ve Zeytin Çeşitleri",
+        "price": 220,
+        "tags": [
+          "Sağlıklı Seçim"
+        ]
+      },
+      {
+        "name": "Pankek 4 Adet",
+        "desc": "Orman Meyveli ve Nutellalı",
+        "price": 170,
+        "tags": []
+      }
+    ]
+  },
+  {
+    "categoryName": "Başlangıçlar & Atıştırmalıklar",
+    "icon": "🍟",
+    "products": [
+      {
+        "name": "Günün Çorbası",
+        "desc": "Mideye Cila, Ruha Şifa, Damaklara Sefa Bir Kâse Çorba",
+        "price": 110,
+        "tags": []
+      },
+      {
+        "name": "Soğan Halkaları",
+        "desc": "Enfes Kızarmış Soğan Halkaları, Tatlı Chili Sos ile",
+        "price": 160,
+        "tags": [
+          "Acılı"
+        ]
+      },
+      {
+        "name": "Mozerella Stick",
+        "desc": "Panelenmiş, Kızartılmış Enfes Mozerella",
+        "price": 200,
+        "tags": []
+      },
+      {
+        "name": "Çıtır Tavuk",
+        "desc": "Panelenmiş Çıtır Tavuk Parçacıkları, Patates Kızartması ve Özel Hazırlanmış Sos ile",
+        "price": 220,
+        "tags": [
+          "Acılı"
+        ]
+      },
+      {
+        "name": "American Combo",
+        "desc": "Mozzarella Stick, Poppers, Çıtır Tavuk, Elma Dilim Patates, Soğan Halkaları ve Özel Sos ile",
+        "price": 280,
+        "tags": [
+          "Süt Ürünü İçerir"
+        ]
+      },
+      {
+        "name": "Patates Kızartması",
+        "desc": "Parmak Patates Veya Elma Dilim Patates",
+        "price": 160,
+        "tags": []
+      },
+      {
+        "name": "Cheddar Soslu Patates",
+        "desc": "Parmak Patates, Dana Jambon ve Cheddar Sosu",
+        "price": 210,
+        "tags": [
+          "Süt Ürünü İçerir"
+        ]
+      },
+      {
+        "name": "Quesedilla (Etli)",
+        "desc": "Meksika Mutfağının Özel Spesiyali Nachos, Et Parçaları, Jalapeno Biber, Renkli Biberler ve Limonlu Yoğurt Sos ile",
+        "price": 280,
+        "tags": [
+          "Acılı"
+        ]
+      },
+      {
+        "name": "Quesedilla (Tavuklu)",
+        "desc": "Meksika Mutfağının Özel Spesiyali Nachos, Tavuk Parçaları, Jalapeno Biber, Renkli Biberler ve Limonlu Yoğurt Sos ile",
+        "price": 240,
+        "tags": [
+          "Acılı"
+        ]
+      },
+      {
+        "name": "Peynir Tabağı",
+        "desc": "İthal ve Yerli Peynir Çeşitleri, Gouda, Rokfor, Eski Kaşar, Parmesan, Beyaz Peynir, Ceviz, İncir ve Üzüm",
+        "price": 360,
+        "tags": [
+          "Süt Ürünü İçerir"
+        ]
+      },
+      {
+        "name": "Çıtır Börek Tabağı",
+        "desc": "MPeynirli Sigara Böreği, Muska Böreği, Sebzeli Börek, Sweet Chilli Sos ile",
+        "price": 230,
+        "tags": [
+          "Vejetaryen",
+          "Süt Ürünü İçerir"
+        ]
+      },
+      {
+        "name": "Nachos Etli",
+        "desc": "Meksika Mutfağının Özel Spesiyali Nachos, Et Parçaları, Renkli Biberler, Cheddar Peyniri ve Limonlu Yoğurt Sosu ile",
+        "price": 300,
+        "tags": [
+          "Süt Ürünü İçerir"
+        ]
+      },
+      {
+        "name": "Nachos Tavuklu",
+        "desc": "Meksika Mutfağının Özel Spesiyali Nachos, Tavuk Parçaları, Renkli Biberler, Cheddar Peyniri ve Limonlu Yoğurt Sosu ile",
+        "price": 260,
+        "tags": [
+          "Süt Ürünü İçerir"
+        ]
+      }
+    ]
+  },
+  {
+    "categoryName": "Burger & Sandviç",
+    "icon": "🍔",
+    "products": [
+      {
+        "name": "Lounge Burger",
+        "desc": "Hamburger Köftesi, Marul, Domates, Patates Kızartması, Coleslaw Salata ve Relish Sos Eşliğinde",
+        "price": 300,
+        "tags": [
+          "Glüten İçerir",
+          "Sağlıklı Seçim"
+        ]
+      },
+      {
+        "name": "Cheese Burger",
+        "desc": "Hamburger Köftesi, Özel Sos, Cheddar Peyniri, Marul, Domates, Turşu, Patates Kızartması ve Coleslaw Salata Eşliğinde",
+        "price": 310,
+        "tags": [
+          "Süt Ürünü İçerir",
+          "Glüten İçerir",
+          "Sağlıklı Seçim"
+        ]
+      },
+      {
+        "name": "Chicken Burger",
+        "desc": "Panelenmiş Tavuk Kızartma, Kırmızı Soğan, Marul, Domates, Turşu, Patates Kızartması ve Coleslaw Salata Eşliğinde",
+        "price": 260,
+        "tags": [
+          "Glüten İçerir",
+          "Sağlıklı Seçim"
+        ]
+      },
+      {
+        "name": "Texas Burger",
+        "desc": "Hamburger Köftesi, Cheddar Peyniri, Özel Acı Sos, Jalapeno, Kıtır Soğan, Marul, Domates, Patates Kızartması ve Coleslaw Salata Eşliğinde",
+        "price": 320,
+        "tags": [
+          "Acılı",
+          "Süt Ürünü İçerir",
+          "Glüten İçerir",
+          "Sağlıklı Seçim"
+        ]
+      },
+      {
+        "name": "Barbekü Soslu Burger",
+        "desc": "Hamburger Köftesi, Özel Barbekü Sos, Marul, Domates, Turşu, Patates Kızartması, Coleslaw Salata Eşliğinde, Kıtır Soğan ve Jeaepeno Biber",
+        "price": 320,
+        "tags": [
+          "Glüten İçerir",
+          "Sağlıklı Seçim"
+        ]
+      },
+      {
+        "name": "Anatolian Burger",
+        "desc": "Hamburger Köftesi, Özel Sos, Marul, Domates, Turşu, Patates Kızartması ve Coleslaw Salata Eşliğinde",
+        "price": 320,
+        "tags": [
+          "Glüten İçerir",
+          "Sağlıklı Seçim"
+        ]
+      },
+      {
+        "name": "Trio Burger",
+        "desc": "Mantar Soslu - Chedar Peynirli - Karamelize Soğanlı Üç Ayrı Tat",
+        "price": 320,
+        "tags": [
+          "Vejetaryen",
+          "Süt Ürünü İçerir",
+          "Glüten İçerir"
+        ]
+      },
+      {
+        "name": "Petto Sandviç",
+        "desc": "Fileto Levrek, Karışık Ekşi Mayalı Ciabatta Sandviç Ekmeği, Izgara Tavuk, Özel Sos, Marul, Domates, Turşu, Patates Kızartması ve Coleslaw Salata Eşliğinde",
+        "price": 270,
+        "tags": [
+          "Sağlıklı Seçim"
+        ]
+      },
+      {
+        "name": "Carne Sandviç",
+        "desc": "Ekşi Mayalı Ciabatta Sandviç Ekmeği, Izgara Köfte, Özel Sos, Marul, Domates, Turşu, Kıtır Soğan, Kırmızı Soğan, Marul, Patates Kızartması ve Coleslaw Salata Eşliğinde",
+        "price": 300,
+        "tags": [
+          "Sağlıklı Seçim"
+        ]
+      },
+      {
+        "name": "Tonno Sandviç",
+        "desc": "Ekşi Mayalı Ciabatta Sandviç Ekmeği, Ton Balığı, Özel Sos, Marul, Domates, Turşu, Kırmızı Soğan, Patates Kızartması ve Coleslaw Salata Eşliğinde",
+        "price": 300,
+        "tags": [
+          "Sağlıklı Seçim"
+        ]
+      },
+      {
+        "name": "Steak Sandviç",
+        "desc": "Ekşi Mayalı Ciabatta Sandviç Ekmeği, Izgara Biftek, Özel Sos, Marul, Domates, Turşu, Patates Kızartması ve Coleslaw Salata Eşliğinde",
+        "price": 340,
+        "tags": [
+          "Sağlıklı Seçim"
+        ]
+      },
+      {
+        "name": "Soğuk Sandviç",
+        "desc": "Ekşi Mayalı Ciabatta Sandviç Ekmeği, Marul, Domates, Turşu, Coleslaw ve Patates Tava",
+        "price": 260,
+        "tags": []
+      },
+      {
+        "name": "Çıtır Balıklı Sandviç",
+        "desc": "Ekşi Mayalı Ciabatta Sandviç Ekmeği, Panelenmiş Çıtır Balık, Özel Sos, Roka, Kırmızı Soğan, Turşu, Patates Kızartması ve Coleslaw Salata Eşliğinde",
+        "price": 330,
+        "tags": [
+          "Sağlıklı Seçim"
+        ]
+      },
+      {
+        "name": "Sucuklu Sandviç",
+        "desc": "Ekşi Mayalı Ciabatta Sandviç Ekmeği, Izgarada Pişmiş Kasap Sucuk, Kaşar Peynir, Patates",
+        "price": 330,
+        "tags": [
+          "Süt Ürünü İçerir"
+        ]
+      }
+    ]
+  },
+  {
+    "categoryName": "Taş Fırın Pizza",
+    "icon": "🍕",
+    "products": [
+      {
+        "name": "Pizza Margarita",
+        "desc": "Pizza Sos, Mozzarella, Taze Domates",
+        "price": 250,
+        "tags": [
+          "Süt Ürünü İçerir",
+          "Glüten İçerir"
+        ]
+      },
+      {
+        "name": "Pizza Vario",
+        "desc": "Pizza Sos, Mozzarella, Sucuk, Salam, Sosis, Mantar, Mısır, Taze Kekik",
+        "price": 330,
+        "tags": [
+          "Vejetaryen",
+          "Süt Ürünü İçerir",
+          "Glüten İçerir"
+        ]
+      },
+      {
+        "name": "Pizza Carne",
+        "desc": "Pizza Sos, Mozzarella, Minik Köfteler, Renkli Biber, Kırmızı Soğan, Jalapeno Biber ve Taze Kekik",
+        "price": 330,
+        "tags": [
+          "Acılı",
+          "Süt Ürünü İçerir",
+          "Glüten İçerir"
+        ]
+      },
+      {
+        "name": "Ton Balıklı Pizza",
+        "desc": "Pizza Sos, Mozzarella, Ton Balığı, Kırmızı Soğan, Siyah Dilim Zeytin, Taze Kekik",
+        "price": 370,
+        "tags": [
+          "Süt Ürünü İçerir",
+          "Glüten İçerir"
+        ]
+      },
+      {
+        "name": "Steak Pizza",
+        "desc": "Pizza Sos, Mozzarella, Taze Roka, Biftek Parçaları, Domates, Kırmızı Soğan, Jalapeno",
+        "price": 370,
+        "tags": [
+          "Acılı",
+          "Süt Ürünü İçerir",
+          "Glüten İçerir"
+        ]
+      },
+      {
+        "name": "Chicken Pizza",
+        "desc": "Pizza Sos, Mozzarella, Tavuk Parçaları, Yeşil Biber, Kırmızı Biber, Jalapeno, Kırmızı Soğan",
+        "price": 320,
+        "tags": [
+          "Acılı",
+          "Süt Ürünü İçerir",
+          "Glüten İçerir"
+        ]
+      },
+      {
+        "name": "Pizza Verdure",
+        "desc": "Pizza Sos, Mozzarella, Renkli Biberler, Kabak, Havuç, Mantar, Brokoli, Mısır, Zeytin, Taze Kekik",
+        "price": 290,
+        "tags": [
+          "Vejetaryen",
+          "Süt Ürünü İçerir",
+          "Glüten İçerir"
+        ]
+      },
+      {
+        "name": "Kavurmalı Pizza",
+        "desc": "Pizza Sos, Mozzarella, Kavurma, Yeşil Biber, Kırmızı Biber, Jalapeno, Kırmızı Soğan, Roka",
+        "price": 390,
+        "tags": [
+          "Acılı",
+          "Süt Ürünü İçerir",
+          "Glüten İçerir"
+        ]
+      },
+      {
+        "name": "4 Peynirli Pizza",
+        "desc": "Pizza Sos, Mozzarella, Emmantel, Rokfor, Cheddar, Parmesan",
+        "price": 410,
+        "tags": [
+          "Süt Ürünü İçerir",
+          "Glüten İçerir"
+        ]
+      },
+      {
+        "name": "Italiano Pizza",
+        "desc": "Pesto Sos, Mozzarella, Cherry Domates, Ceviz, Roka, Nar Ekşisi Sos",
+        "price": 320,
+        "tags": [
+          "Süt Ürünü İçerir",
+          "Glüten İçerir"
+        ]
+      },
+      {
+        "name": "Carnaval Pizza",
+        "desc": "Pizza Sos, Mozzarella, Sucuk, Hellim Peyniri, Yeşil Biber ve Taze Roka",
+        "price": 320,
+        "tags": [
+          "Süt Ürünü İçerir",
+          "Glüten İçerir"
+        ]
+      },
+      {
+        "name": "Ekstra Malzeme",
+        "desc": "Pizza Sos, Mozzarella, Kavurma, Yeşil Biber, Kırmızı Biber, Jalapeno, Kırmızı Soğan, Roka",
+        "price": 290,
+        "tags": [
+          "Acılı",
+          "Süt Ürünü İçerir",
+          "Glüten İçerir"
+        ]
+      }
+    ]
+  },
+  {
+    "categoryName": "Makarnalar & Noodle",
+    "icon": "🍝",
+    "products": [
+      {
+        "name": "Spaghetti Napolitan",
+        "desc": "Domates Sos, Parmesan Peyniri",
+        "price": 230,
+        "tags": [
+          "Süt Ürünü İçerir"
+        ]
+      },
+      {
+        "name": "5 Peynirli Ravioli",
+        "desc": "Pesto Sos, Krema, Ceviz, Parmesan",
+        "price": 280,
+        "tags": [
+          "Süt Ürünü İçerir"
+        ]
+      },
+      {
+        "name": "Fettucine Chicken Alfredo",
+        "desc": "Meksika Baharatına Bulanmış Tavuk Dilimleri, Renkli Biber, Parmesan Peyniri, Krema Sos",
+        "price": 290,
+        "tags": [
+          "Süt Ürünü İçerir"
+        ]
+      },
+      {
+        "name": "Fettucine Steak",
+        "desc": "Krema Sos, Biftek Dilimleri, Mantar, Parmesan Peyniri",
+        "price": 360,
+        "tags": [
+          "Süt Ürünü İçerir"
+        ]
+      },
+      {
+        "name": "Bodrum Yaz Mantısı",
+        "desc": "Çıtır Kızarmış Bodrum Yaz Mantısı, Domates Sos ve Yoğurt",
+        "price": 260,
+        "tags": []
+      },
+      {
+        "name": "Penne Arabiatta",
+        "desc": "Domates Sos, Acı Biber, Siyah Dilim Zeytin, Parmesan Peyniri",
+        "price": 280,
+        "tags": [
+          "Acılı",
+          "Süt Ürünü İçerir"
+        ]
+      },
+      {
+        "name": "Spaghetti Bolognese",
+        "desc": "Dana Kıymalı Sos, Parmesan Peyniri",
+        "price": 270,
+        "tags": [
+          "Süt Ürünü İçerir"
+        ]
+      },
+      {
+        "name": "3 Renkli Tortelini",
+        "desc": "Taze Mantar, Krema Sos ile Hazırlanmış Peynir Dolgulu Tortellini, Mısır",
+        "price": 290,
+        "tags": [
+          "Vejetaryen",
+          "Süt Ürünü İçerir"
+        ]
+      },
+      {
+        "name": "Cevizli Erişte",
+        "desc": "Ev Yapımı Erişte, Terayağı, Ceviz İçi",
+        "price": 250,
+        "tags": []
+      },
+      {
+        "name": "Caserecce Bolognese",
+        "desc": "Caserecce Makarna, Özel Bolognese Sos ve Parmesan Peyniri ile",
+        "price": 270,
+        "tags": [
+          "Süt Ürünü İçerir",
+          "Glüten İçerir"
+        ]
+      }
+    ]
+  },
+  {
+    "categoryName": "Et Yemekleri & Izgaralar",
+    "icon": "🥩",
+    "products": [
+      {
+        "name": "Dana Antrikot Izgara",
+        "desc": "Kekikli tereyağı, fırınlanmış taze patates, köz biber ve domates eşliğinde 240g ızgara antrikot.",
+        "price": 480,
+        "tags": [
+          "Izgara",
+          "Glütensiz"
+        ]
+      },
+      {
+        "name": "Lokum Bonfile Dilimleri",
+        "desc": "Karamelize soğan yatağında, trüf yağlı patates püresi ve sote mevsim sebzeleri ile.",
+        "price": 520,
+        "tags": [
+          "Şefin Tavsiyesi",
+          "Glütensiz"
+        ]
+      },
+      {
+        "name": "Kuzu Pirzola Izgara",
+        "desc": "Biberiye ve kekik marineli 3 adet kuzu pirzola, firik bulgur pilavı ve sumaklı soğan ile.",
+        "price": 490,
+        "tags": [
+          "Izgara",
+          "Geleneksel"
+        ]
+      },
+      {
+        "name": "Geleneksel Izgara Kasap Köfte",
+        "desc": "Özel baharatlarla yoğrulmuş kasap köfte, patates kızartması, közlenmiş biber ve piyaz ile.",
+        "price": 340,
+        "tags": [
+          "Geleneksel",
+          "Çok Satan"
+        ]
+      },
+      {
+        "name": "Beğendili Dana Külbastı",
+        "desc": "Köz patlıcanlı ılık beğendi yatağında ince dövülmüş dana külbastı dilimleri.",
+        "price": 460,
+        "tags": [
+          "Geleneksel",
+          "Süt Ürünü İçerir"
+        ]
+      },
+      {
+        "name": "Çökertme Kebabı",
+        "desc": "Kıtır kibrit patates üzerinde marine dana bonfile şeritleri, süzme sarımsaklı yoğurt ve kızgın tereyağlı domates sos.",
+        "price": 450,
+        "tags": [
+          "Çok Satan",
+          "Geleneksel"
+        ]
+      },
+      {
+        "name": "Tane Karabiber Soslu Bonfile (Pepper Steak)",
+        "desc": "Fransız usulü tane yeşil ve siyah karabiber krema soslu bonfile madalyonları, patates püresi ile.",
+        "price": 510,
+        "tags": [
+          "Şefin Tavsiyesi"
+        ]
+      },
+      {
+        "name": "Karışık Izgara Tabağı",
+        "desc": "Kasap köfte, kuzu pirzola, marine tavuk pirzola ve ızgara sucuk, pilav ve köz sebzeler eşliğinde zengin tabak.",
+        "price": 560,
+        "tags": [
+          "Doyurucu",
+          "Izgara"
+        ]
+      }
+    ]
+  },
+  {
+    "categoryName": "Tavuk Spesiyalleri",
+    "icon": "🍗",
+    "products": [
+      {
+        "name": "Tatlı-Ekşi Soslu Tavuk",
+        "desc": "Çıtır Kızarmış Enfes Tavuklar, Tatlı Ekşi Sos, Patates Kızartması, Sebzeli Noodle ve Soğan Halkası",
+        "price": 330,
+        "tags": [
+          "Vejetaryen"
+        ]
+      },
+      {
+        "name": "Chicken Fingers",
+        "desc": "Özel Karışım Kajun Baharatıyla Karıştırılmış Tavuk Filetoları, Patates Kızartması, Soğan Halkaları, Coleslaw Salata, Salsa Sos Eşliğinde",
+        "price": 320,
+        "tags": [
+          "Glüten İçerir",
+          "Sağlıklı Seçim"
+        ]
+      },
+      {
+        "name": "Mexican Chicken",
+        "desc": "Jalapeno, Meksika Fasulyesi ve Sebzelerle Sotelenmiş Tavuk Parçaları",
+        "price": 320,
+        "tags": [
+          "Vejetaryen",
+          "Acılı"
+        ]
+      },
+      {
+        "name": "Tavuk Schnitzel",
+        "desc": "Özel Karışımla Kızartılmış Tavuk, Patates Kızartması, Soğan Halkaları, Coleslaw Salata ve Baharatlı Tereyağı",
+        "price": 320,
+        "tags": [
+          "Sağlıklı Seçim"
+        ]
+      },
+      {
+        "name": "Köri Soslu Tavuk",
+        "desc": "Tavuk, Köri Sosu, Karışık Sebze, Kırmızı Biber, Pilav, Cacık, Patates Kızartması, Akdeniz Yeşilliği",
+        "price": 320,
+        "tags": [
+          "Vejetaryen",
+          "Acılı"
+        ]
+      },
+      {
+        "name": "Mantar Soslu Tavuk",
+        "desc": "Nefis Mantar Soslu Tavuk, Tereyağlı Pilav, Patates Kızartması, Cacık, Domates ve Biber Izgara",
+        "price": 340,
+        "tags": [
+          "Acılı"
+        ]
+      },
+      {
+        "name": "Tikka Soslu Tavuk",
+        "desc": "Tavuk But, Tortilla Ekmeği, Tıkka Sos, Erişte, Domates, Biber Izgara, Patates Kızartma",
+        "price": 320,
+        "tags": []
+      },
+      {
+        "name": "Peri Peri Tavuk But",
+        "desc": "Sekiz Çeşit Otla Tatlandırılmış Tavuk But Parçaları, Pilav, Karışık Sebze, Cacık",
+        "price": 240,
+        "tags": [
+          "Vejetaryen",
+          "Acılı"
+        ]
+      },
+      {
+        "name": "Mantar Soslu Schnitzel",
+        "desc": "Özel Karışımla Kızartılmış Tavuk, Pilav ve Patates Kızartması ile Domates Biber Izgara",
+        "price": 340,
+        "tags": []
+      },
+      {
+        "name": "Chicken Katsu",
+        "desc": "Kızarmış Panelenmiş Tavuk, Köri Sos, Karışık Sebze ve Pilav",
+        "price": 320,
+        "tags": [
+          "Vejetaryen"
+        ]
+      },
+      {
+        "name": "Extra But",
+        "desc": "Sekiz Çeşit Otla Tatlandırılmış Tavuk But Parçaları, Pilav, Karışık Sebze, Cacık",
+        "price": 150,
+        "tags": [
+          "Vejetaryen",
+          "Acılı"
+        ]
+      }
+    ]
+  },
+  {
+    "categoryName": "Deniz Mahsulleri",
+    "icon": "🦐",
+    "products": [
+      {
+        "name": "Somon Izgara",
+        "desc": "Izgara Somon, Sebze Demeti, Ispanak Sote, Roka, Izgara Limon, Sarımsak Sos",
+        "price": 540,
+        "tags": [
+          "Vejetaryen"
+        ]
+      },
+      {
+        "name": "Fish Schnitzel",
+        "desc": "Özel Karışımıyla Baharatlarıyla Panelenmiş Çıtır Balık, Roka, Sarımsak Sos, Sebze ve Limon",
+        "price": 410,
+        "tags": [
+          "Vejetaryen"
+        ]
+      },
+      {
+        "name": "Levrek Izgara",
+        "desc": "Izgara Fileto Levrek, Sote Ispanak, Karışık Sebze, Roka, Sarımsak Sos",
+        "price": 390,
+        "tags": [
+          "Vejetaryen"
+        ]
+      },
+      {
+        "name": "Salsa Soslu Somon",
+        "desc": "Izgara Somon, Salsa, Sebzeli ve Soya Soslu Noodle Eşliğinde",
+        "price": 540,
+        "tags": [
+          "Vejetaryen"
+        ]
+      },
+      {
+        "name": "Tereyağlı Karides Sote",
+        "desc": "Bol Sarımsak, Tereyağı, Domates ve Renkli Biberler ile Sotelenmiş İri Karides",
+        "price": 490,
+        "tags": []
+      },
+      {
+        "name": "Fish And Chips",
+        "desc": "Mezgit Kızartma, Roka, Salsa, Sarımsak Sos, Patates Kızartması Eşliğinde",
+        "price": 390,
+        "tags": []
+      },
+      {
+        "name": "Karidesli Salata",
+        "desc": "Casarecce Makarna, Sotelenmiş İri Karides, Domates Sos, Tereyağı ve Sarımsak",
+        "price": 440,
+        "tags": [
+          "Glüten İçerir",
+          "Sağlıklı Seçim"
+        ]
+      },
+      {
+        "name": "Karidesli Salata",
+        "desc": "Göbek Salata, Sotelenmiş İri Karides, Cherry Domates, Kırmızı Soğan, Kapari, Havuç, Mısır, Közlenmiş Biber",
+        "price": 440,
+        "tags": [
+          "Sağlıklı Seçim"
+        ]
+      },
+      {
+        "name": "Somonlu Salata",
+        "desc": "Izgara Somon, Akdeniz Yeşilliği, Taze Frenk Soğanı, Domates, Mısır ve Roka",
+        "price": 540,
+        "tags": [
+          "Sağlıklı Seçim"
+        ]
+      }
+    ]
+  },
+  {
+    "categoryName": "Meksika Mutfağı",
+    "icon": "🌮",
+    "products": [
+      {
+        "name": "Chicken Fajita",
+        "desc": "Jülyen Doğranmış Soğan ve Renkli Biberlerin Üzerine, Izgara Tavuk, Guacamole Sos, Közlenmiş Biber Sos, Sarımsak Sos ve Tortilla Ekmekleri ile Servis Edilir.",
+        "price": 360,
+        "tags": [
+          "Glüten İçerir"
+        ]
+      },
+      {
+        "name": "Steak Fajita",
+        "desc": "Jülyen Doğranmış Soğan ve Renkli Biberlerin Üzerine, Izgara Biftek dilimleri, Guacamole Sos, Közlenmiş Biber Sos, Sarımsak Sos ve Tortilla Ekmekleri ile Servis Edilir.",
+        "price": 490,
+        "tags": [
+          "Glüten İçerir"
+        ]
+      },
+      {
+        "name": "Combo Fajita",
+        "desc": "Jülyen Doğranmış Soğan ve Renkli Biberlerin Üzerine, Izgara Tavuk ve Izgara BiftekDilimleri, Guacamole Sos, Közlenmiş Biber Sos, Sarımsak Sos ve Tortilla Ekmekleri ile Servis Edilir.",
+        "price": 470,
+        "tags": [
+          "Glüten İçerir"
+        ]
+      },
+      {
+        "name": "Mexican Chicken",
+        "desc": "Jalapeno, Meksika Fasulyesi ve Sebzelerle Sotelenmiş Tavuk Parçaları",
+        "price": 320,
+        "tags": [
+          "Vejetaryen",
+          "Acılı"
+        ]
+      }
+    ]
+  },
+  {
+    "categoryName": "Uzak Doğu Mutfağı",
+    "icon": "🥡",
+    "products": [
+      {
+        "name": "Çin Usulü",
+        "desc": "Noodle, Karışık Sebze, Soya Sos, Özel Sos",
+        "price": 250,
+        "tags": [
+          "Vejetaryen"
+        ]
+      },
+      {
+        "name": "Çin Usulü Tavuklu Noodle",
+        "desc": "Noodle, Tavuk Parçaları, Sebze Karışımı, Soya Sos, Özel Sos",
+        "price": 280,
+        "tags": [
+          "Vejetaryen"
+        ]
+      },
+      {
+        "name": "Çin Usulü Etli Noodle",
+        "desc": "Noodle, Dana Biftek Parçaları, Sebze Karışımı, Soya Sos, Özel Sos",
+        "price": 370,
+        "tags": [
+          "Vejetaryen"
+        ]
+      },
+      {
+        "name": "Karidesli Noodle",
+        "desc": "Noodle, İri Karides, Karışık Sebze, Soya Sos",
+        "price": 420,
+        "tags": [
+          "Vejetaryen"
+        ]
+      }
+    ]
+  },
+  {
+    "categoryName": "Gurme Salatalar",
+    "icon": "🥗",
+    "products": [
+      {
+        "name": "Mevsim Salatası",
+        "desc": "Göbek Salata, Roka, Havuç, Salatalık, Domates, Zeytin, Mısır",
+        "price": 220,
+        "tags": [
+          "Sağlıklı Seçim"
+        ]
+      },
+      {
+        "name": "Çıtır Balıklı Salata",
+        "desc": "Panelenmiş Balık, Akdeniz Yeşilliği, Kırmızı Soğan, Havuç, Salatalık, Közlenmiş Biber, Dilim Zeytin, Zeytinyağı ve Limon Sos",
+        "price": 330,
+        "tags": [
+          "Sağlıklı Seçim"
+        ]
+      },
+      {
+        "name": "Nova Salata",
+        "desc": "Göbek Salata, Tulum Peynir, Ceviz, Cherry Domates, Zeytin, Maydanoz, Mısır, Salatalık, Yayla Sos ve Nar Ekşisi",
+        "price": 260,
+        "tags": [
+          "Süt Ürünü İçerir",
+          "Sağlıklı Seçim"
+        ]
+      },
+      {
+        "name": "Chicken Sezar",
+        "desc": "Caesar Sos, Izgara Tavuk Dilimleri, Kruton, Göbek Salata, Mısır, Parmesan Peyniri, Kapari",
+        "price": 270,
+        "tags": [
+          "Süt Ürünü İçerir",
+          "Sağlıklı Seçim"
+        ]
+      },
+      {
+        "name": "Steak Sezar",
+        "desc": "Caesar Sos, Izgara Biftek Dilimleri, Kruton, Göbek Salata, Mısır, Parmesan Peyniri, Kapari",
+        "price": 380,
+        "tags": [
+          "Süt Ürünü İçerir",
+          "Sağlıklı Seçim"
+        ]
+      },
+      {
+        "name": "Akdeniz Salata",
+        "desc": "Akdeniz Yeşilliği, Roka, Hellim Peynir, Beyaz Peynir, Cherry Domates, Siyah Zeytin, Mısır ve Balsamik Sos",
+        "price": 270,
+        "tags": [
+          "Süt Ürünü İçerir",
+          "Sağlıklı Seçim"
+        ]
+      },
+      {
+        "name": "Kinoa Salata",
+        "desc": "Kinoa ile Harmanlanmış Akdeniz Yeşillikleri, Domates, Salatalık, Maydanoz, Frenk Üzümü, Kırmızı Soğan, Közlenmiş Biber ve Nar Ekşi Sos",
+        "price": 280,
+        "tags": [
+          "Sağlıklı Seçim"
+        ]
+      },
+      {
+        "name": "Steak Salad",
+        "desc": "Akdeniz Yeşilliği, Dağ Kekiği ile Marine Edilmiş Biftek, Roka, Havuç, Közlenmiş Biber, Mısır, Kırmızı Soğan",
+        "price": 380,
+        "tags": []
+      },
+      {
+        "name": "Ton Balıklı Salata",
+        "desc": "Akdeniz Yeşillikleri, Roka, Ton Balığı, Cherry Domates, Siyah Zeytin, Mısır, Havuç, Domates, Salatalık, Yumurta",
+        "price": 320,
+        "tags": [
+          "Sağlıklı Seçim"
+        ]
+      },
+      {
+        "name": "Düşük Kalorili Tavuklu Salata",
+        "desc": "Körpe Mevsim Yeşillik Üzerine Izgara Tavuk, Domates, Salatalık, Havuç, Közlenmiş Biber",
+        "price": 270,
+        "tags": [
+          "Sağlıklı Seçim"
+        ]
+      },
+      {
+        "name": "Avokadolu Salata",
+        "desc": "Akdeniz Yeşilliği, Avocado, Cherry Domates, Mısır, Salatalık, Közlenmiş Biber, Havuç, Zeytin",
+        "price": 360,
+        "tags": [
+          "Sağlıklı Seçim"
+        ]
+      },
+      {
+        "name": "Enginarlı Salata",
+        "desc": "Akdeniz Yeşilliği, Kişnişle Marine Edilmiş Enginar Kalbi, Roka, Havuç, Közlenmiş Biber, Mısır, Kırmızı Soğan",
+        "price": 340,
+        "tags": [
+          "Sağlıklı Seçim"
+        ]
+      },
+      {
+        "name": "Karidesli Salata",
+        "desc": "Göbek Salata, Sotelenmiş İri Karides, Cherry Domates, Kırmızı Soğan, Kapari, Havuç, Mısır, Közlenmiş Biber",
+        "price": 440,
+        "tags": [
+          "Sağlıklı Seçim"
+        ]
+      },
+      {
+        "name": "Somonlu Salata",
+        "desc": "Izgara Somon, Akdeniz Yeşilliği, Taze Frenk Soğanı, Domates, Mısır ve Roka",
+        "price": 540,
+        "tags": [
+          "Sağlıklı Seçim"
+        ]
+      }
+    ]
+  },
+  {
+    "categoryName": "Fit & Sağlıklı Tabaklar",
+    "icon": "🥑",
+    "products": [
+      {
+        "name": "Diyet Tabağı (230kcal)",
+        "desc": "Misket Köfteler, Domates Soslu Makarna, Parmak Patates ile",
+        "price": 260,
+        "tags": [
+          "Glüten İçerir"
+        ]
+      },
+      {
+        "name": "Penne Fit (230kcal)",
+        "desc": "Kepekli Penne, Domates, Yoğurt ve Taze Baharat",
+        "price": 230,
+        "tags": [
+          "Sağlıklı Seçim"
+        ]
+      },
+      {
+        "name": "Buharda Tavuklu Sebze (230kcal)",
+        "desc": "Tamamen Buharda Hazırlanmış Tavuk ve Sebzeler, Soya Sosu ve Yoğurt",
+        "price": 280,
+        "tags": [
+          "Vejetaryen"
+        ]
+      },
+      {
+        "name": "Düşük Kalorili Tavuklu Salata (250kcal)",
+        "desc": "Körpe Mevsim Yeşillik Üzerine Izgara Tavuk, Domates, Salatalık, Havuç, Közlenmiş Biber",
+        "price": 270,
+        "tags": [
+          "Sağlıklı Seçim"
+        ]
+      },
+      {
+        "name": "Kağıtta Fırınlanmış Köfte (275kcal)",
+        "desc": "Özel Hazırlanmış Kasap Köfte, Karışık Sebze, Akdeniz Yeşilliği ve Közlenmiş Biber",
+        "price": 350,
+        "tags": [
+          "Vejetaryen"
+        ]
+      },
+      {
+        "name": "Buharda Somon (260kcal)",
+        "desc": "Tamamen Buharda Hazırlanmış Somon Balığı, Patates Püresi ile",
+        "price": 540,
+        "tags": []
+      },
+      {
+        "name": "Somonlu Salata (270kcal)",
+        "desc": "Izgara Somon, Akdeniz Yeşilliği, Taze Frenk Soğanı, Domates, Mısır ve Roka",
+        "price": 540,
+        "tags": [
+          "Sağlıklı Seçim"
+        ]
+      },
+      {
+        "name": "Kağıtta Levrek Buğulama (285kcal)",
+        "desc": "Fileto Levrek, Karışık Sebze, Akdeniz Yeşilliği ve Közlenmiş Biber",
+        "price": 400,
+        "tags": [
+          "Vejetaryen"
+        ]
+      }
+    ]
+  },
+  {
+    "categoryName": "Çocuk Menüsü",
+    "icon": "🧒",
+    "products": [
+      {
+        "name": "Köfte Yağmuru",
+        "desc": "Misket Köfteler, Domates Soslu Makarna, Parmak Patates ile",
+        "price": 200,
+        "tags": [
+          "Glüten İçerir"
+        ]
+      },
+      {
+        "name": "Tweety Nugget",
+        "desc": "Panelenmiş Tavuk Parçacıkları, Domates Soslu Makarna, Parmak Patates ile",
+        "price": 180,
+        "tags": [
+          "Acılı",
+          "Glüten İçerir"
+        ]
+      },
+      {
+        "name": "Scooby-Doo Hot Dog",
+        "desc": "Mini Sosis, Domates Soslu Makarna, Parmak Patates ile",
+        "price": 180,
+        "tags": [
+          "Glüten İçerir"
+        ]
+      },
+      {
+        "name": "Sünger Bob Burger 2'li",
+        "desc": "Mini Hamburger Köfteleri, Özel Sos, Marul, Domates, Turşu, Parmak Patates ile",
+        "price": 190,
+        "tags": [
+          "Glüten İçerir"
+        ]
+      },
+      {
+        "name": "Ninja Pizza",
+        "desc": "Pizza Hamuru, Pizza Sos, Mozerella Peyniri, Misket Köfte",
+        "price": 180,
+        "tags": [
+          "Süt Ürünü İçerir",
+          "Glüten İçerir"
+        ]
+      },
+      {
+        "name": "Sevimli Hayalet Casper Makarna",
+        "desc": "Spagetti Makarna, Tavuk Parçaları, Domates Sos",
+        "price": 180,
+        "tags": [
+          "Glüten İçerir"
+        ]
+      },
+      {
+        "name": "Nutellalı Pizza Tatlısı",
+        "desc": "Pizza Hamuru Üzerine Nutella ve Muz",
+        "price": 180,
+        "tags": [
+          "Glüten İçerir"
+        ]
+      }
+    ]
+  },
+  {
+    "categoryName": "Tatlılar & Pastalar",
+    "icon": "🍰",
+    "products": [
+      {
+        "name": "Souffle",
+        "desc": "Dünyaca Ünlü Fransız Tatlısı, Çikolatalısı En Sevileni... Vanilyalı Dondurma Eşliğinde",
+        "price": 180,
+        "tags": []
+      },
+      {
+        "name": "Brownie (Dondurma İle)",
+        "desc": "Ceviz, Karamel Sosu ve Vanilya Dondurma ile",
+        "price": 180,
+        "tags": []
+      },
+      {
+        "name": "Waffle (Dondurma İle)",
+        "desc": "Enfes Çikolata Sosuyla Tatlandırılmış, Taze Mevsim Meyveleri ve Dondurma ile Sunulan Müthiş Lezzet",
+        "price": 210,
+        "tags": [
+          "Glüten İçerir"
+        ]
+      },
+      {
+        "name": "Oreolu Cheescake",
+        "desc": "Özel Bisküvi Tabanı ile Hazırlanmış Cheesecake",
+        "price": 180,
+        "tags": []
+      },
+      {
+        "name": "Kızarmış Dondurma (2 Top)",
+        "desc": "Çıtır Çıtır Kaplanmış Kesme Dondurma",
+        "price": 180,
+        "tags": []
+      },
+      {
+        "name": "San Sebastian Cheesecake",
+        "desc": "Meşhur San Sebastian Cheesecake",
+        "price": 180,
+        "tags": []
+      },
+      {
+        "name": "Newyorke Cheesecake",
+        "desc": "Tereyağı ile Hazırlanmış Özel Bisküvi Tabanı ve Geleneksel Yöntemlerle Fırınlanmış New York Stili Cheesecake",
+        "price": 180,
+        "tags": []
+      },
+      {
+        "name": "Mini Cheesecake Tabağı",
+        "desc": "Franbuaz - Limon - Karamel - Çikolata",
+        "price": 180,
+        "tags": []
+      },
+      {
+        "name": "Çilekli Milföy",
+        "desc": "Taze Çıtır Milföy Hamuru Çilekle Tatlandırıldı",
+        "price": 180,
+        "tags": []
+      },
+      {
+        "name": "Kedi Dilli Tiramisu",
+        "desc": "Fileto Levrek, Karışık Sebze, Akdeniz Yeşilliği ve Közlenmiş Biber",
+        "price": 170,
+        "tags": [
+          "Vejetaryen"
+        ]
+      },
+      {
+        "name": "Kırmızı Şeytan Pasta",
+        "desc": "Fileto Levrek, Karışık Sebze, Akdeniz Yeşilliği ve Közlenmiş Biber",
+        "price": 170,
+        "tags": [
+          "Vejetaryen"
+        ]
+      },
+      {
+        "name": "Kalpli Pasta",
+        "desc": "Fileto Levrek, Karışık Sebze, Akdeniz Yeşilliği ve Közlenmiş Biber",
+        "price": 180,
+        "tags": [
+          "Vejetaryen"
+        ]
+      },
+      {
+        "name": "Yüksek Havuçlu Kek",
+        "desc": "Fileto Levrek, Karışık Sebze, Akdeniz Yeşilliği ve Közlenmiş Biber",
+        "price": 170,
+        "tags": [
+          "Vejetaryen"
+        ]
+      },
+      {
+        "name": "Red Welwed Cheescake",
+        "desc": "Fileto Levrek, Karışık Sebze, Akdeniz Yeşilliği ve Közlenmiş Biber",
+        "price": 180,
+        "tags": [
+          "Vejetaryen"
+        ]
+      },
+      {
+        "name": "Latte Pasta",
+        "desc": "Fileto Levrek, Karışık Sebze, Akdeniz Yeşilliği ve Közlenmiş Biber",
+        "price": 180,
+        "tags": [
+          "Vejetaryen"
+        ]
+      }
+    ]
+  },
+  {
+    "categoryName": "Sıcak & Soğuk İçecekler",
+    "icon": "🥤",
+    "products": [
+      {
+        "name": "Coca Cola",
+        "desc": "Coca Cola - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": []
+      },
+      {
+        "name": "Fanta",
+        "desc": "Fanta - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": []
+      },
+      {
+        "name": "Sprite",
+        "desc": "Sprite - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": []
+      },
+      {
+        "name": "Schweppes Mandarin",
+        "desc": "Schweppes Mandarin - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": []
+      },
+      {
+        "name": "Schweppes Tonik",
+        "desc": "Schweppes Tonik - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": []
+      },
+      {
+        "name": "Fuse Tea Limon",
+        "desc": "Fuse Tea Limon - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": []
+      },
+      {
+        "name": "Fuse Tea Şeftali",
+        "desc": "Fuse Tea Şeftali - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": []
+      },
+      {
+        "name": "Fuse Tea Manga & Ananas",
+        "desc": "Fuse Tea Manga & Ananas - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": []
+      },
+      {
+        "name": "Cappy Şeftali",
+        "desc": "Cappy Şeftali - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": []
+      },
+      {
+        "name": "Cappy Kayısı",
+        "desc": "Cappy Kayısı - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": []
+      },
+      {
+        "name": "Cappy Vişne",
+        "desc": "Cappy Vişne - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": []
+      },
+      {
+        "name": "Sprite",
+        "desc": "Sprite - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": []
+      },
+      {
+        "name": "Cappy Portakal",
+        "desc": "Cappy Portakal - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": []
+      },
+      {
+        "name": "Cappy Karışık Meyve",
+        "desc": "Cappy Karışık Meyve - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": [
+          "Doğal Meyve"
+        ]
+      },
+      {
+        "name": "Burn Enerji İçeceği",
+        "desc": "Burn Enerji İçeceği - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": []
+      },
+      {
+        "name": "Ayran",
+        "desc": "Ayran - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": []
+      },
+      {
+        "name": "Limonata",
+        "desc": "Limonata - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": []
+      },
+      {
+        "name": "Çilekli Limonata",
+        "desc": "Çilekli Limonata - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": []
+      },
+      {
+        "name": "Frozen Elmalı Limonata",
+        "desc": "Frozen Elmalı Limonata - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": [
+          "Soğuk İçecek"
+        ]
+      },
+      {
+        "name": "Frozen Çilekli Limonata",
+        "desc": "Frozen Çilekli Limonata - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": [
+          "Soğuk İçecek"
+        ]
+      },
+      {
+        "name": "Taze Portakal Suyu",
+        "desc": "Taze Portakal Suyu - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": [
+          "Doğal Meyve"
+        ]
+      },
+      {
+        "name": "Taze Elma Suyu",
+        "desc": "Taze Elma Suyu - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": [
+          "Doğal Meyve"
+        ]
+      },
+      {
+        "name": "Taze Havuç Suyu",
+        "desc": "Taze Havuç Suyu - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": [
+          "Doğal Meyve"
+        ]
+      },
+      {
+        "name": "Taze Karışık Meyve Suyu",
+        "desc": "Taze Karışık Meyve Suyu - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": [
+          "Doğal Meyve"
+        ]
+      },
+      {
+        "name": "Milk Shake Çikolatalı Çilekli",
+        "desc": "Milk Shake Çikolatalı Çilekli - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": []
+      },
+      {
+        "name": "Americano (Sade/Sütlü)",
+        "desc": "Americano (Sade/Sütlü) - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": [
+          "Kahve",
+          "Şekersiz"
+        ]
+      },
+      {
+        "name": "Caffe Espresso",
+        "desc": "Caffe Espresso - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": [
+          "Kahve",
+          "Şekersiz"
+        ]
+      },
+      {
+        "name": "Caffe Espresso Macchiato",
+        "desc": "Caffe Espresso Macchiato - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": [
+          "Kahve",
+          "Şekersiz"
+        ]
+      },
+      {
+        "name": "Cappucino",
+        "desc": "Cappucino - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": []
+      },
+      {
+        "name": "Caffe Latte Aromatica",
+        "desc": "Caffe Latte Aromatica - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": [
+          "Kahve"
+        ]
+      },
+      {
+        "name": "Caffe Latte",
+        "desc": "Caffe Latte - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": [
+          "Kahve"
+        ]
+      },
+      {
+        "name": "Caramel Latte",
+        "desc": "Caramel Latte - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": [
+          "Kahve"
+        ]
+      },
+      {
+        "name": "Caffe Mocha",
+        "desc": "Caffe Mocha - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": []
+      },
+      {
+        "name": "French Press",
+        "desc": "French Press - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": []
+      },
+      {
+        "name": "Filtre Kahve (Sade/Sütlü)",
+        "desc": "Filtre Kahve (Sade/Sütlü) - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": [
+          "Kahve",
+          "Şekersiz"
+        ]
+      },
+      {
+        "name": "Hot Chocolate",
+        "desc": "Hot Chocolate - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": []
+      },
+      {
+        "name": "Türk Kahvesi",
+        "desc": "Türk Kahvesi - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": [
+          "Kahve"
+        ]
+      },
+      {
+        "name": "Damla Sakızlı Türk Kahvesi",
+        "desc": "Damla Sakızlı Türk Kahvesi - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": [
+          "Kahve"
+        ]
+      },
+      {
+        "name": "Sahlep",
+        "desc": "Sahlep - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": []
+      },
+      {
+        "name": "Ice Americano",
+        "desc": "Ice Americano - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": [
+          "Kahve",
+          "Şekersiz"
+        ]
+      },
+      {
+        "name": "Ice Caffe Latte",
+        "desc": "Ice Caffe Latte - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": [
+          "Kahve"
+        ]
+      },
+      {
+        "name": "Ice Caramel Latte",
+        "desc": "Ice Caramel Latte - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": [
+          "Kahve"
+        ]
+      },
+      {
+        "name": "Ice Chocolate",
+        "desc": "Ice Chocolate - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": []
+      },
+      {
+        "name": "Frozita Karamelli",
+        "desc": "Frozita Karamelli - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": []
+      },
+      {
+        "name": "Frozita Furit",
+        "desc": "Frozita Furit - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": []
+      },
+      {
+        "name": "Demlik Çay",
+        "desc": "Demlik Çay - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": [
+          "Sıcak Çay"
+        ]
+      },
+      {
+        "name": "Demlik Çay Fincan",
+        "desc": "Demlik Çay Fincan - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": [
+          "Sıcak Çay"
+        ]
+      },
+      {
+        "name": "Yeşilçay",
+        "desc": "Yeşilçay - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": [
+          "Sıcak Çay"
+        ]
+      },
+      {
+        "name": "Adaçayı",
+        "desc": "Adaçayı - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": [
+          "Sıcak Çay"
+        ]
+      },
+      {
+        "name": "ElmaTarçın",
+        "desc": "ElmaTarçın - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": []
+      },
+      {
+        "name": "Ihlamur",
+        "desc": "Ihlamur - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": []
+      },
+      {
+        "name": "Kuşburnu",
+        "desc": "Kuşburnu - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": []
+      },
+      {
+        "name": "Kış Çayı",
+        "desc": "Kış Çayı - Taze hazırlanmış premium içecek servisi.",
+        "price": 85,
+        "tags": [
+          "Sıcak Çay"
+        ]
+      }
+    ]
+  }
+]

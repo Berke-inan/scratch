@@ -1,0 +1,60 @@
+# ==========================================
+# .NET / C# / Visual Studio Build Outputs
+# ==========================================
+bin/
+obj/
+[Bb]in/
+[Oo]bj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+.vscode/
+.idea/
+
+# NuGet Packages
+*.nupkg
+packages/
+
+# ==========================================
+# Node.js / Next.js Frontend
+# ==========================================
+node_modules/
+menu-app/node_modules/
+.next/
+menu-app/.next/
+out/
+menu-app/out/
+build/
+dist/
+
+# Next.js telemetry & cache
+.turbo/
+menu-app/.turbo/
+
+# Environment Variables & Local Secrets
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+menu-app/.env.local
+menu-app/.env*.local
+
+# Logs & Debugging
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# OS Generated Files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+._*
+
+# Scratch & Temporary Scraper Files
+scratch_*.html

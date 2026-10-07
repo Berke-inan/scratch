@@ -1,0 +1,24 @@
+{
+  "name": "lounge-box-menu",
+  "version": "1.0.0",
+  "description": "Multi-Tenant AI-Powered QR Menu & Cafe Assistant (.NET 8 + Next.js 16 + Supabase + Gemini 3.5)",
+  "scripts": {
+    "setup": "node setup.js",
+    "start": "node start.js",
+    "dev": "node start.js",
+    "dev:backend": "dotnet run --project MenuApp.Api --urls http://0.0.0.0:5238",
+    "dev:frontend": "npm run dev --prefix menu-app -- -p 3000",
+    "build": "dotnet build && npm run build --prefix menu-app"
+  },
+  "keywords": [
+    "ai",
+    "gemini",
+    "qr-menu",
+    "nextjs",
+    "dotnet",
+    "supabase",
+    "restaurant"
+  ],
+  "author": "",
+  "license": "MIT"
+}
