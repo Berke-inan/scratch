@@ -6,9 +6,19 @@ import {
   ProductDto,
 } from "@/types/menu"
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL?.trim().replace(/\/$/, "") ||
-  "http://localhost:5238"
+function getApiBaseUrl(): string {
+  const raw = process.env.NEXT_PUBLIC_API_URL?.trim()
+  if (!raw) return "http://localhost:5238"
+  let sanitized = raw.replace(/\/+$/, "")
+  if (!/^https?:\/\//i.test(sanitized)) {
+    sanitized = sanitized.startsWith("localhost") || sanitized.startsWith("127.0.0.1")
+      ? `http://${sanitized}`
+      : `https://${sanitized}`
+  }
+  return sanitized
+}
+
+const API_BASE_URL = getApiBaseUrl()
 
 // Demo Fallback Data for presentation safety
 const FALLBACK_CAFE: CafeDto = {
