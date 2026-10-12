@@ -2,63 +2,60 @@
 
 import React from "react"
 import { useApp } from "@/context/AppContext"
-import { QrCode, Sparkles, Clock, Wifi, Search } from "lucide-react"
+import { QrCode, Clock } from "lucide-react"
 
 export function MenuHeader() {
-  const { activeCafe, setIsDrawerOpen, tableNumber, setIsQrModalOpen } = useApp()
+  const { activeCafe, tableNumber, setIsQrModalOpen } = useApp()
 
   return (
-    <div className="w-full bg-neutral-900 text-white rounded-3xl overflow-hidden border border-neutral-800 shadow-xl mb-4 relative">
-      {/* Decorative Gradient Background */}
-      <div className="h-32 w-full bg-gradient-to-r from-neutral-800 via-amber-950/40 to-neutral-900 relative p-4 flex items-start justify-between">
-        <button
-          onClick={() => setIsQrModalOpen(true)}
-          title="QR Kodları Gör / Değiştir"
-          className="flex items-center gap-2 bg-neutral-900/80 hover:bg-neutral-800 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-medium text-amber-300 border border-amber-500/30 cursor-pointer transition-colors"
-        >
-          <QrCode className="w-3.5 h-3.5" />
-          <span>Masa {tableNumber || 1} • QR Menü</span>
-        </button>
+    <div className="relative w-full h-44 sm:h-48 rounded-3xl overflow-hidden mb-4 shadow-lg border border-neutral-800/80 group">
+      {/* 1. Cafe Ambience Background Image */}
+      <div
+        className="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-105"
+        style={{
+          backgroundImage:
+            "url('https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=1200&q=80')",
+        }}
+      />
 
-        <div className="flex items-center gap-1.5 bg-neutral-900/80 backdrop-blur-md px-2.5 py-1 rounded-full text-[11px] text-neutral-300">
-          <Wifi className="w-3 h-3 text-emerald-400" />
-          <span>Misafir WiFi: Aktif</span>
+      {/* 2. Premium Dark Gradient Overlay for optimal text readability */}
+      <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/70 to-neutral-950/40" />
+
+      {/* 3. Hero Content Container */}
+      <div className="relative h-full p-4 sm:p-5 flex flex-col justify-between z-10">
+        {/* Top Bar: Table Info / QR (Left) and Hours Badge (Right) */}
+        <div className="flex items-center justify-between">
+          <button
+            onClick={() => setIsQrModalOpen(true)}
+            title="QR Kodları Gör / Masa Değiştir"
+            className="flex items-center gap-1.5 bg-black/60 hover:bg-black/80 backdrop-blur-md px-3 py-1.5 rounded-full text-[11px] font-semibold text-amber-300 border border-amber-500/30 transition-all cursor-pointer active:scale-95 shadow-sm"
+          >
+            <QrCode className="w-3.5 h-3.5 text-amber-400" />
+            <span>Masa {tableNumber || 1} • QR Menü</span>
+          </button>
+
+          <div className="flex items-center gap-1.5 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-full text-[11px] font-medium text-neutral-300 border border-white/10 shadow-sm">
+            <Clock className="w-3.5 h-3.5 text-amber-400" />
+            <span>08:30 - 23:00</span>
+          </div>
         </div>
-      </div>
 
-      {/* Cafe Profile Info */}
-      <div className="px-5 pb-5 pt-1 relative -mt-8">
-        <div className="flex items-end justify-between mb-3">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-600 to-amber-800 flex items-center justify-center text-2xl font-bold shadow-lg border-2 border-neutral-900">
-            ☕
+        {/* Bottom Bar: Cafe Title & Compact One-line Description */}
+        <div className="mt-auto">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400/90 font-mono">
+              Açık • Masaya Servis
+            </span>
           </div>
 
-          <div className="flex items-center gap-1.5 text-xs text-neutral-400">
-            <Clock className="w-3.5 h-3.5 text-neutral-500" />
-            <span>08:30 - 23:00 Açık</span>
-          </div>
-        </div>
+          <h1 className="text-xl sm:text-2xl font-black text-white tracking-tight drop-shadow-sm leading-tight">
+            {activeCafe?.name || "Lounge Box Kitchen"}
+          </h1>
 
-        <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
-          {activeCafe?.name || "Artisan Cafe & Bakery"}
-        </h1>
-        <p className="text-xs text-neutral-400 mt-1 leading-relaxed">
-          Taze kavrulmuş özel çekirdekler, el yapımı taze tatlılar ve glütensiz seçenekler.
-        </p>
-
-        {/* Instant Search Bar Trigger */}
-        <div
-          onClick={() => setIsDrawerOpen(true)}
-          className="mt-4 flex items-center justify-between bg-neutral-800/90 hover:bg-neutral-800 px-4 py-3 rounded-2xl border border-neutral-700/60 cursor-pointer transition-all group shadow-inner"
-        >
-          <div className="flex items-center gap-2.5 text-neutral-400 group-hover:text-neutral-200 text-sm">
-            <Search className="w-4 h-4 text-amber-400" />
-            <span>AI Asistan ile ara (örn: &quot;şekersiz kahve&quot;)</span>
-          </div>
-          <span className="flex items-center gap-1 text-[11px] font-semibold bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full border border-amber-500/30">
-            <Sparkles className="w-3 h-3" />
-            <span>AI Destekli</span>
-          </span>
+          <p className="text-[11.5px] sm:text-xs text-neutral-300/90 mt-0.5 line-clamp-1 drop-shadow-xs font-normal">
+            Özenle seçilmiş kahve çekirdekleri, gurme atıştırmalıklar ve taze pastacılık lezzetleri.
+          </p>
         </div>
       </div>
     </div>

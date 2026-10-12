@@ -58,20 +58,23 @@ npm start
 
 ## 🔑 Gizli Anahtarlar & Veritabanı Ayarları (Configuration)
 
-Proje hassas anahtarları Git'e göndermemek için **.NET User Secrets** yapısını destekler. Ekip arkadaşlarınız yerel bilgisayarlarında şu komutlarla kendi ortamlarını bağlayabilir:
+Ekip arkadaşlarınızın anahtarları girmesi için **2 süper kolay yol** bulunmaktadır:
 
-### A. Veritabanı Bağlantısı (Supabase)
+### 1. Yol (En Kolayı - Sihirbaz):
+Proje dizinindeki **`set-keys.bat`** dosyasına çift tıklayın (veya terminalde `npm run setup` yapın).
+Açılan ekranda:
+- **Gemini API Key:** Yapıştırın ve Enter'a basın.
+- **Supabase DB Şifresi:** Enter'a basarak varsayılan şifreyi onaylayın.
+Sihirbaz ayarları otomatik olarak yerel konfigürasyonunuza kaydeder.
+
+### 2. Yol (Terminal Severler):
 ```bash
 dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Host=aws-1-eu-central-1.pooler.supabase.com;Port=5432;Database=postgres;Username=postgres.wtrizpvvdjxmhrdzfbat;Password=SIFRE_BURAYA;SSL Mode=Require;Trust Server Certificate=true" --project MenuApp.Api
-```
 
-### B. Gemini API Anahtarı (Google AI Studio)
-```bash
 dotnet user-secrets set "Gemini:ApiKey" "GEMINI_API_KEY_BURAYA" --project MenuApp.Api
-dotnet user-secrets set "Gemini:Model" "gemini-3.5-flash-lite" --project MenuApp.Api
 ```
 
-*(Dilerseniz bu ayarları `MenuApp.Api/appsettings.Development.json` dosyasına da yazabilirsiniz; bu dosya `.gitignore` tarafından korunur.)*
+*(Not: `MenuApp.Api/appsettings.Development.json` dosyası `.gitignore` ile korunmaktadır; anahtarlar asla kazara GitHub'a gitmez.)*
 
 ---
 

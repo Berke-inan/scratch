@@ -4,7 +4,7 @@ import React from "react"
 import { AppProvider, useApp } from "@/context/AppContext"
 import { PresentationToolbar } from "@/components/toolbar/PresentationToolbar"
 import { ChatWindow } from "@/components/chat/ChatWindow"
-import { HybridMenuView } from "@/components/menu/HybridMenuView"
+import { HybridMenuContainer } from "@/components/menu/HybridMenuContainer"
 import { QrModal } from "@/components/qr/QrModal"
 
 function MainAppContent() {
@@ -23,7 +23,7 @@ function MainAppContent() {
           </div>
         ) : (
           <div className="w-full animate-in fade-in duration-200">
-            <HybridMenuView />
+            <HybridMenuContainer />
           </div>
         )}
       </main>

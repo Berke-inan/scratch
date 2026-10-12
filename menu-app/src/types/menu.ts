@@ -1,4 +1,10 @@
-export interface ProductDto {
+export interface Tag {
+  id: string
+  name: string
+  tagType?: string
+}
+
+export interface Product {
   id: string
   categoryId: string
   categoryName: string
@@ -9,10 +15,22 @@ export interface ProductDto {
   tags: string[]
 }
 
-export interface MenuSearchResultDto {
-  message: string
-  products: ProductDto[]
+export interface Category {
+  id: string
+  cafeId: string
+  name: string
+  products?: Product[]
 }
+
+export interface MenuSearchResponse {
+  message: string
+  products: Product[]
+}
+
+// Aliases for DTO compatibility
+export type ProductDto = Product
+export type CategoryDto = Category
+export type MenuSearchResultDto = MenuSearchResponse
 
 export interface MenuInitDto {
   cafeId: string
@@ -23,13 +41,6 @@ export interface MenuInitDto {
 export interface CafeDto {
   id: string
   name: string
-}
-
-export interface CategoryDto {
-  id: string
-  cafeId: string
-  name: string
-  products?: ProductDto[]
 }
 
 export interface MenuQueryDto {

@@ -1,0 +1,20 @@
+# Version Control & IDE
+**/.git
+**/.gitignore
+**/.vs
+**/.vscode
+**/*.user
+
+# Build outputs & caches
+**/bin/
+**/obj/
+
+# Node & Frontend (Vercel'de barındırılacağı için imaja dahil edilmez)
+**/node_modules/
+menu-app/
+
+# Standart dışı / lokal araçlar
+MenuSeeder/
+Dockerfile
+.dockerignore
+*.md

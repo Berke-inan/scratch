@@ -1,5 +1,16 @@
-const { spawn } = require('child_process');
+const { spawn, execSync } = require('child_process');
 const os = require('os');
+const fs = require('fs');
+const path = require('path');
+
+// Ensure credentials exist before starting
+const devSettingsPath = path.join(__dirname, 'MenuApp.Api', 'appsettings.Development.json');
+if (!fs.existsSync(devSettingsPath)) {
+  console.clear();
+  console.log('\x1b[33m⚠️  İlk çalıştırma tespit edildi: API ve veritabanı ayarları yapılandırılıyor...\x1b[0m\n');
+  require('./configure-keys.js');
+  return;
+}
 
 console.clear();
 console.log('\x1b[1m\x1b[33m===============================================================\x1b[0m');
@@ -72,13 +83,32 @@ const frontend = spawn(
   }
 );
 
+let browserOpened = false;
+
 frontend.stdout.on('data', (data) => {
-  const lines = data.toString().trim().split('\n');
+  const text = data.toString();
+  const lines = text.trim().split('\n');
   lines.forEach((line) => {
     if (line.trim()) {
       console.log(`\x1b[35m[FRONTEND]\x1b[0m ${line}`);
     }
   });
+
+  // Automatically open browser once Next.js is ready
+  if (!browserOpened && (text.includes('Ready in') || text.includes('Local:'))) {
+    browserOpened = true;
+    setTimeout(() => {
+      try {
+        if (isWindows) {
+          spawn('cmd.exe', ['/c', 'start', 'http://localhost:3000'], { stdio: 'ignore' });
+        } else if (process.platform === 'darwin') {
+          spawn('open', ['http://localhost:3000'], { stdio: 'ignore' });
+        } else {
+          spawn('xdg-open', ['http://localhost:3000'], { stdio: 'ignore' });
+        }
+      } catch (e) {}
+    }, 1000);
+  }
 });
 
 frontend.stderr.on('data', (data) => {

@@ -142,8 +142,8 @@ export function AiSearchDrawer() {
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-6 text-xs text-neutral-400">
-                  Aramanızla eşleşen spesifik bir ürün listelenmedi. Farklı bir arama deneyebilirsiniz.
+                <div className="text-center py-6 px-4 bg-neutral-50/60 dark:bg-neutral-800/40 rounded-2xl border border-neutral-100 dark:border-neutral-800 text-xs text-neutral-500 dark:text-neutral-400">
+                  💡 Menüden ürün bulmak için örneğin <span className="text-amber-600 dark:text-amber-400 font-medium">"şekersiz kahve"</span>, <span className="text-amber-600 dark:text-amber-400 font-medium">"çikolatalı tatlı"</span> veya <span className="text-amber-600 dark:text-amber-400 font-medium">"sıcak atıştırmalık"</span> yazabilirsiniz.
                 </div>
               )}
             </div>

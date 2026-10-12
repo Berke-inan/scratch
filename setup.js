@@ -45,7 +45,7 @@ if (!fs.existsSync(envPath) && fs.existsSync(envExamplePath)) {
 }
 
 console.log('===============================================================');
-console.log('\x1b[32m🎉 TEBRİKLER! Kurulum başarıyla tamamlandı.\x1b[0m');
-console.log('Şimdi projeyi tek komutla başlatmak için:');
-console.log('  👉 \x1b[1m\x1b[33mnpm start\x1b[0m  veya  \x1b[1m\x1b[33mstart.bat\x1b[0m');
-console.log('===============================================================\n');
+console.log('\x1b[32m🎉 Bağımlılıklar başarıyla yüklendi.\x1b[0m');
+console.log('Son adım olarak API anahtarları yapılandırılıyor...\n');
+
+require('./configure-keys.js');

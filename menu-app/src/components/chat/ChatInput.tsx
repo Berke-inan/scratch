@@ -4,11 +4,7 @@ import React, { useState } from "react"
 import { ChatTheme } from "@/types/chat"
 import {
   Send,
-  Smile,
-  Paperclip,
-  Plus,
   ArrowUp,
-  Camera,
   Sparkles,
 } from "lucide-react"
 
@@ -74,35 +70,22 @@ export function ChatInput({ theme, onSendMessage, disabled }: ChatInputProps) {
     return (
       <form
         onSubmit={handleSubmit}
-        className="flex items-center gap-1.5 p-2 bg-[#F0F2F5] dark:bg-[#202C33] border-t border-neutral-300 dark:border-neutral-800"
+        className="flex items-center gap-2 p-2.5 bg-[#F0F2F5] dark:bg-[#202C33] border-t border-neutral-300 dark:border-neutral-800"
       >
-        <button
-          type="button"
-          className="p-2 text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200 transition-colors"
-        >
-          <Smile className="w-5 h-5" />
-        </button>
-        <button
-          type="button"
-          className="p-2 text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200 transition-colors"
-        >
-          <Paperclip className="w-5 h-5" />
-        </button>
-
         <input
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Bir mesaj yazın..."
           disabled={disabled}
-          className="flex-1 bg-white dark:bg-[#2A3942] text-neutral-900 dark:text-neutral-100 placeholder-neutral-400 text-sm px-4 py-2.5 rounded-lg focus:outline-none focus:ring-0 shadow-xs"
+          className="flex-1 bg-white dark:bg-[#2A3942] text-neutral-900 dark:text-neutral-100 placeholder-neutral-400 text-sm px-4 py-2.5 rounded-2xl focus:outline-none focus:ring-0 shadow-xs border border-transparent focus:border-[#00A884]/30 transition-all"
         />
 
         <button
           type="submit"
           disabled={!input.trim() || disabled}
-          className={`p-2.5 rounded-full text-white transition-all shadow-md ${
-            input.trim()
+          className={`p-2.5 rounded-full text-white transition-all shadow-md shrink-0 ${
+            input.trim() && !disabled
               ? "bg-[#00A884] hover:bg-[#02906F] scale-100 cursor-pointer"
               : "bg-neutral-400 dark:bg-neutral-700 cursor-not-allowed opacity-60"
           }`}
@@ -118,16 +101,9 @@ export function ChatInput({ theme, onSendMessage, disabled }: ChatInputProps) {
     return (
       <form
         onSubmit={handleSubmit}
-        className="flex items-center gap-2 p-2.5 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md border-t border-neutral-200 dark:border-neutral-800"
+        className="flex items-center p-2.5 bg-white/85 dark:bg-neutral-900/85 backdrop-blur-md border-t border-neutral-200 dark:border-neutral-800"
       >
-        <button
-          type="button"
-          className="p-1.5 rounded-full bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-300"
-        >
-          <Plus className="w-4 h-4" />
-        </button>
-
-        <div className="flex-1 flex items-center bg-neutral-100 dark:bg-neutral-800 rounded-full px-3 py-1.5 border border-neutral-300/60 dark:border-neutral-700/60">
+        <div className="flex-1 flex items-center bg-neutral-100 dark:bg-neutral-800 rounded-full px-3.5 py-1.5 border border-neutral-300/60 dark:border-neutral-700/60 focus-within:border-blue-500/50 transition-colors">
           <input
             type="text"
             value={input}
@@ -139,13 +115,13 @@ export function ChatInput({ theme, onSendMessage, disabled }: ChatInputProps) {
           <button
             type="submit"
             disabled={!input.trim() || disabled}
-            className={`p-1 rounded-full text-white transition-all ml-1 ${
-              input.trim()
-                ? "bg-gradient-to-b from-[#3488FE] to-[#0A6BFF] scale-100 cursor-pointer"
+            className={`p-1.5 rounded-full text-white transition-all ml-1.5 shrink-0 ${
+              input.trim() && !disabled
+                ? "bg-gradient-to-b from-[#3488FE] to-[#0A6BFF] scale-100 cursor-pointer shadow-xs"
                 : "bg-neutral-300 dark:bg-neutral-600 cursor-not-allowed opacity-50"
             }`}
           >
-            <ArrowUp className="w-4 h-4" />
+            <ArrowUp className="w-3.5 h-3.5" />
           </button>
         </div>
       </form>
@@ -158,14 +134,7 @@ export function ChatInput({ theme, onSendMessage, disabled }: ChatInputProps) {
       onSubmit={handleSubmit}
       className="flex items-center gap-2 p-3 bg-white dark:bg-neutral-900 border-t border-neutral-200 dark:border-neutral-800"
     >
-      <button
-        type="button"
-        className="p-2 text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200"
-      >
-        <Camera className="w-5 h-5" />
-      </button>
-
-      <div className="flex-1 flex items-center bg-neutral-100 dark:bg-neutral-800 rounded-3xl px-4 py-2 border border-neutral-200 dark:border-neutral-700">
+      <div className="flex-1 flex items-center bg-neutral-100 dark:bg-neutral-800 rounded-3xl px-4 py-2 border border-neutral-200 dark:border-neutral-700 focus-within:border-[#2C80FF]/50 transition-colors">
         <input
           type="text"
           value={input}
@@ -179,8 +148,8 @@ export function ChatInput({ theme, onSendMessage, disabled }: ChatInputProps) {
       <button
         type="submit"
         disabled={!input.trim() || disabled}
-        className={`p-2.5 rounded-full text-white transition-all ${
-          input.trim()
+        className={`p-2.5 rounded-full text-white transition-all shrink-0 ${
+          input.trim() && !disabled
             ? "bg-[#2C80FF] hover:bg-[#1E6FE0] shadow-md cursor-pointer"
             : "bg-neutral-300 dark:bg-neutral-700 opacity-60 cursor-not-allowed"
         }`}

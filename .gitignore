@@ -40,6 +40,10 @@ menu-app/.turbo/
 .env.production.local
 menu-app/.env.local
 menu-app/.env*.local
+MenuApp.Api/appsettings.Development.json
+appsettings.Development.json
+secrets.env
+*.secrets.json
 
 # Logs & Debugging
 npm-debug.log*

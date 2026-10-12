@@ -5,14 +5,8 @@ import { useApp } from "@/context/AppContext"
 import { ChatMessageItem } from "./ChatMessageItem"
 import { ChatInput } from "./ChatInput"
 import {
-  Phone,
-  Video,
-  MoreVertical,
-  ChevronLeft,
-  Info,
   Sparkles,
   Bot,
-  Coffee,
 } from "lucide-react"
 
 export function ChatWindow() {
@@ -27,29 +21,20 @@ export function ChatWindow() {
   const renderHeader = () => {
     if (theme === "whatsapp") {
       return (
-        <div className="flex items-center justify-between px-3 py-2.5 bg-[#075E54] dark:bg-[#1F2C34] text-white shadow-sm z-10">
-          <div className="flex items-center gap-2">
-            <button className="text-white/80 hover:text-white p-1 -ml-1">
-              <ChevronLeft className="w-5 h-5" />
-            </button>
+        <div className="flex items-center px-4 py-3 bg-[#075E54] dark:bg-[#1F2C34] text-white shadow-sm z-10">
+          <div className="flex items-center gap-3">
             <div className="relative">
-              <div className="w-9 h-9 rounded-full bg-emerald-700 flex items-center justify-center font-bold text-sm border border-emerald-400/40">
+              <div className="w-10 h-10 rounded-full bg-emerald-700 flex items-center justify-center font-bold text-sm border border-emerald-400/40 shadow-xs">
                 <Bot className="w-5 h-5 text-emerald-200" />
               </div>
               <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-[#075E54]" />
             </div>
             <div className="flex flex-col">
-              <span className="text-sm font-semibold leading-tight truncate max-w-[170px] sm:max-w-[240px]">
+              <span className="text-sm font-semibold leading-tight truncate">
                 {activeCafe?.name || "Kafe Asistanı"}
               </span>
               <span className="text-[11px] text-emerald-200/90 leading-tight">çevrimiçi</span>
             </div>
-          </div>
-
-          <div className="flex items-center gap-3 text-white/90">
-            <Video className="w-4 h-4 cursor-pointer hover:text-white" />
-            <Phone className="w-4 h-4 cursor-pointer hover:text-white" />
-            <MoreVertical className="w-4 h-4 cursor-pointer hover:text-white" />
           </div>
         </div>
       )
@@ -57,41 +42,29 @@ export function ChatWindow() {
 
     if (theme === "imessage") {
       return (
-        <div className="flex items-center justify-between px-4 py-3 bg-neutral-100/80 dark:bg-neutral-900/80 backdrop-blur-xl border-b border-neutral-200 dark:border-neutral-800 z-10">
-          <div className="flex items-center gap-1.5 text-blue-500 font-medium text-sm">
-            <ChevronLeft className="w-5 h-5 -ml-1" />
-            <span>Geri</span>
+        <div className="flex flex-col items-center justify-center px-4 py-2.5 bg-neutral-100/85 dark:bg-neutral-900/85 backdrop-blur-xl border-b border-neutral-200 dark:border-neutral-800 z-10">
+          <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-500 text-white flex items-center justify-center text-xs font-bold shadow-sm mb-1">
+            <Sparkles className="w-4 h-4" />
           </div>
-
-          <div className="flex flex-col items-center">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-500 text-white flex items-center justify-center text-xs font-bold shadow-sm">
-              <Sparkles className="w-4 h-4" />
-            </div>
-            <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100 mt-0.5">
-              {activeCafe?.name || "Menü Asistanı"}
-            </span>
-          </div>
-
-          <button className="text-blue-500 text-sm font-medium">FaceTime</button>
+          <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100 leading-tight">
+            {activeCafe?.name || "Menü Asistanı"}
+          </span>
+          <span className="text-[10px] text-neutral-400 leading-tight mt-0.5">
+            iMessage
+          </span>
         </div>
       )
     }
 
     if (theme === "oneui") {
       return (
-        <div className="px-5 pt-4 pb-3 bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-800 z-10">
-          <div className="flex items-center justify-between text-neutral-500 mb-2">
-            <ChevronLeft className="w-5 h-5 cursor-pointer" />
-            <MoreVertical className="w-4 h-4 cursor-pointer" />
-          </div>
-          <div>
-            <h2 className="text-lg font-bold text-neutral-900 dark:text-neutral-100 tracking-tight">
-              {activeCafe?.name || "Akıllı Menü Asistanı"}
-            </h2>
-            <p className="text-xs text-neutral-500 dark:text-neutral-400">
-              Yapay Zeka Destekli Masadan Sipariş & Menü
-            </p>
-          </div>
+        <div className="px-5 py-4 bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-800 z-10">
+          <h2 className="text-lg font-bold text-neutral-900 dark:text-neutral-100 tracking-tight leading-tight">
+            {activeCafe?.name || "Akıllı Menü Asistanı"}
+          </h2>
+          <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1">
+            Yapay Zeka Destekli Masadan Sipariş & Menü
+          </p>
         </div>
       )
     }

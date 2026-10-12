@@ -21,6 +21,17 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Configure CORS for Next.js frontend (Vercel, local dev, and network access)
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 // Configure Entity Framework Core with Supabase PostgreSQL (Npgsql)
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -33,7 +44,7 @@ builder.Services.AddValidatorsFromAssemblyContaining<MenuQueryDtoValidator>();
 builder.Services.AddHttpClient<IAiService, GeminiAiService>();
 builder.Services.AddScoped<IMenuService, MenuService>();
 
-// Configure .NET 8 Rate Limiter (Token Bucket: 10 requests per minute per IP)
+// Configure .NET 8 Rate Limiter (Token Bucket: 60 requests per minute per IP)
 builder.Services.AddRateLimiter(options =>
 {
     options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
@@ -47,7 +58,7 @@ builder.Services.AddRateLimiter(options =>
         }, cancellationToken: token);
     };
 
-    // IP-based Token Bucket policy (10 tokens, replenished every 1 minute)
+    // IP-based Token Bucket policy (60 tokens, replenished every 1 minute)
     options.AddPolicy("IpTokenBucketPolicy", httpContext =>
     {
         var ipAddress = httpContext.Connection.RemoteIpAddress?.ToString()
@@ -56,8 +67,8 @@ builder.Services.AddRateLimiter(options =>
 
         return RateLimitPartition.GetTokenBucketLimiter(ipAddress, _ => new TokenBucketRateLimiterOptions
         {
-            TokenLimit = 10,
-            TokensPerPeriod = 10,
+            TokenLimit = 60,
+            TokensPerPeriod = 60,
             ReplenishmentPeriod = TimeSpan.FromMinutes(1),
             QueueLimit = 0,
             AutoReplenishment = true
@@ -73,8 +84,8 @@ builder.Services.AddRateLimiter(options =>
 
         return RateLimitPartition.GetTokenBucketLimiter(ipAddress, _ => new TokenBucketRateLimiterOptions
         {
-            TokenLimit = 10,
-            TokensPerPeriod = 10,
+            TokenLimit = 60,
+            TokensPerPeriod = 60,
             ReplenishmentPeriod = TimeSpan.FromMinutes(1),
             QueueLimit = 0,
             AutoReplenishment = true
@@ -91,7 +102,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// Enable CORS
+app.UseCors("AllowAll");
 
 // Enable Rate Limiter Middleware
 app.UseRateLimiter();
@@ -102,7 +114,7 @@ app.MapGet("/", () => Results.Ok(new
     Application = "MenuApp.Api",
     Status = "Healthy",
     Version = "1.0.0",
-    RateLimiting = "Enabled (10 req/min per IP via Token Bucket)",
+    RateLimiting = "Enabled (60 req/min per IP via Token Bucket)",
     Timestamp = DateTime.UtcNow
 }))
 .WithName("RootHealthCheck")
