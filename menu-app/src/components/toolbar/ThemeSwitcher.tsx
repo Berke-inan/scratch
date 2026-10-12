@@ -8,9 +8,9 @@ import { Smartphone, MessageCircle, Sparkles, Layers } from "lucide-react"
 const THEMES: { id: ChatTheme; label: string; icon: React.ReactNode; color: string }[] = [
   {
     id: "ai-chat",
-    label: "iOS (Apple Messages)",
-    icon: <Sparkles className="w-3.5 h-3.5 text-purple-400" />,
-    color: "from-purple-600 to-indigo-600",
+    label: "AI Arayüzü",
+    icon: <Sparkles className="w-3.5 h-3.5 text-amber-400" />,
+    color: "from-amber-600 to-amber-700",
   },
   {
     id: "whatsapp",
@@ -20,13 +20,13 @@ const THEMES: { id: ChatTheme; label: string; icon: React.ReactNode; color: stri
   },
   {
     id: "imessage",
-    label: "iMessage",
-    icon: <Sparkles className="w-3.5 h-3.5 text-blue-400" />,
-    color: "from-blue-500 to-blue-600",
+    label: "iOS",
+    icon: <Smartphone className="w-3.5 h-3.5 text-sky-400" />,
+    color: "from-sky-500 to-sky-600",
   },
   {
     id: "oneui",
-    label: "Samsung Messages (One UI)",
+    label: "One UI",
     icon: <Layers className="w-3.5 h-3.5 text-indigo-400" />,
     color: "from-indigo-600 to-blue-700",
   },
