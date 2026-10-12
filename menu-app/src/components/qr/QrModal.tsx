@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react"
 import { useApp } from "@/context/AppContext"
 import { QRCodeSVG } from "qrcode.react"
+import { getAppBaseUrl, buildQrTargetUrl } from "@/lib/urlUtils"
 import {
   QrCode,
   X,
@@ -10,10 +11,8 @@ import {
   Copy,
   Check,
   Smartphone,
-  Wifi,
-  Sparkles,
+  Globe,
   Layers,
-  Store,
 } from "lucide-react"
 
 export function QrModal() {
@@ -22,8 +21,7 @@ export function QrModal() {
 
   const [selectedCafeId, setSelectedCafeId] = useState<string>("")
   const [selectedTable, setSelectedTable] = useState<number>(1)
-  const [networkHost, setNetworkHost] = useState<string>("192.168.1.2:3000")
-  const [useLocalhost, setUseLocalhost] = useState<boolean>(false)
+  const [baseUrl, setBaseUrl] = useState<string>("")
   const [copied, setCopied] = useState<boolean>(false)
 
   // Sync selected cafe with activeCafe on open
@@ -35,21 +33,17 @@ export function QrModal() {
     }
   }, [activeCafe, cafes, isQrModalOpen])
 
-  // Detect current hostname if accessed via IP
+  // Resolve dynamic base URL (Vercel / Window origin priority)
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const host = window.location.host // includes port
-      if (!host.includes("localhost") && !host.includes("127.0.0.1")) {
-        setNetworkHost(host)
-      }
+    if (isQrModalOpen) {
+      setBaseUrl(getAppBaseUrl())
     }
-  }, [])
+  }, [isQrModalOpen])
 
   if (!isQrModalOpen) return null
 
   const currentCafe = cafes.find((c) => c.id === selectedCafeId) || activeCafe || cafes[0]
-  const currentHost = useLocalhost ? "localhost:3000" : networkHost
-  const targetUrl = `http://${currentHost}/?cafeId=${currentCafe?.id}&table=${selectedTable}`
+  const targetUrl = buildQrTargetUrl(currentCafe?.id || "a1b2c3d4-e5f6-4a5b-8c9d-0123456789ab", selectedTable, baseUrl)
 
   const handleCopy = () => {
     navigator.clipboard?.writeText(targetUrl)
@@ -83,17 +77,18 @@ export function QrModal() {
               <h2 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
                 Masa QR Kod Üretici
                 <span className="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full font-semibold border border-emerald-500/30">
-                  Canlı
+                  Canlı / Production
                 </span>
               </h2>
               <p className="text-xs text-neutral-400">
-                Kafeler ve Masalar (1 - 5) için taranabilir QR Kodlar
+                Kafeler ve Masalar (1 - 5) için taranabilir dinamik QR kodlar
               </p>
             </div>
           </div>
 
           <button
             onClick={() => setIsQrModalOpen(false)}
+            aria-label="Kapat"
             className="p-1.5 rounded-full text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
@@ -146,53 +141,37 @@ export function QrModal() {
             </div>
           </div>
 
-          {/* 3. Host / Network Mode Switcher */}
-          <div className="bg-neutral-950/70 p-3 rounded-2xl border border-neutral-800 space-y-2">
+          {/* 3. Dynamic Base URL Settings (No localhost) */}
+          <div className="bg-neutral-950/70 p-3.5 rounded-2xl border border-neutral-800 space-y-2">
             <div className="flex items-center justify-between">
-              <span className="font-semibold text-neutral-200 flex items-center gap-1.5">
-                <Wifi className="w-3.5 h-3.5 text-emerald-400" />
-                Bağlantı Modu (Telefon Erişimi)
+              <span className="font-semibold text-neutral-200 flex items-center gap-1.5 text-xs">
+                <Globe className="w-3.5 h-3.5 text-emerald-400" />
+                Hedef Yayın Adresi (Base URL)
               </span>
-              <div className="flex items-center gap-1 bg-neutral-900 p-0.5 rounded-lg border border-neutral-800">
-                <button
-                  onClick={() => setUseLocalhost(false)}
-                  className={`px-2 py-1 rounded-md text-[10px] font-semibold transition-all cursor-pointer ${
-                    !useLocalhost
-                      ? "bg-emerald-500 text-neutral-950"
-                      : "text-neutral-400 hover:text-white"
-                  }`}
-                >
-                  Wi-Fi (Telefon)
-                </button>
-                <button
-                  onClick={() => setUseLocalhost(true)}
-                  className={`px-2 py-1 rounded-md text-[10px] font-semibold transition-all cursor-pointer ${
-                    useLocalhost
-                      ? "bg-neutral-700 text-white"
-                      : "text-neutral-400 hover:text-white"
-                  }`}
-                >
-                  Localhost
-                </button>
-              </div>
+              <span className="text-[10px] bg-emerald-500/15 text-emerald-400 px-2 py-0.5 rounded-full font-mono border border-emerald-500/20">
+                Otomatik Çözümlendi
+              </span>
             </div>
 
-            {!useLocalhost ? (
-              <div className="flex items-center gap-2">
-                <span className="text-[11px] text-neutral-400 shrink-0">Yerel Ağ IP:</span>
-                <input
-                  type="text"
-                  value={networkHost}
-                  onChange={(e) => setNetworkHost(e.target.value)}
-                  className="flex-1 bg-neutral-900 border border-neutral-700/80 rounded-lg px-2.5 py-1 text-neutral-200 text-xs focus:outline-none focus:border-amber-400 font-mono"
-                  placeholder="192.168.1.2:3000"
-                />
-              </div>
-            ) : (
-              <p className="text-[11px] text-neutral-400">
-                Localhost modu sadece bu bilgisayardaki tarayıcı içindir. Telefondan okutmak için Wi-Fi modunu kullanın.
-              </p>
-            )}
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                value={baseUrl}
+                onChange={(e) => setBaseUrl(e.target.value)}
+                className="flex-1 bg-neutral-900 border border-neutral-700/80 rounded-xl px-3 py-1.5 text-neutral-200 text-xs focus:outline-none focus:border-amber-400 font-mono"
+                placeholder="https://scratch-e6j4kgn11-berke-inan.vercel.app"
+              />
+              <button
+                onClick={() => setBaseUrl(getAppBaseUrl(true))}
+                title="Vercel adresine sıfırla"
+                className="px-2.5 py-1.5 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-[11px] font-semibold text-neutral-300 border border-neutral-700 transition-colors shrink-0 cursor-pointer"
+              >
+                Sıfırla
+              </button>
+            </div>
+            <p className="text-[10.5px] text-neutral-400">
+              Telefonla okutulduğunda kullanıcı doğrudan bu adrese bağlanır.
+            </p>
           </div>
 
           {/* 4. The QR Code Display Card */}
@@ -231,13 +210,13 @@ export function QrModal() {
             </div>
           </div>
 
-          {/* 5. Mobile Wi-Fi Guidance Card */}
+          {/* 5. Mobile Scan Guidance Card */}
           <div className="flex items-start gap-2.5 bg-neutral-950/80 p-3 rounded-2xl border border-neutral-800/80 text-neutral-300">
             <Smartphone className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
             <div className="text-[11px] leading-relaxed">
               <p className="font-semibold text-white">Telefondan Okuturken:</p>
               <p className="text-neutral-400 mt-0.5">
-                Telefonunuz ve bilgisayarınız aynı ev/ofis Wi-Fi ağına bağlı olmalıdır. Telefon kameranızı yukarıdaki QR koda tuttuğunuzda Masa {selectedTable} menüsü otomatik açılacaktır.
+                Kamera QR koda tutulduğunda Masa {selectedTable} canlı menüsü otomatik açılır ve yapay zeka asistanı masaya özel karşılamayla menü siparişine yardımcı olur.
               </p>
             </div>
           </div>

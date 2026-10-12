@@ -6,22 +6,21 @@ import {
   QrCode,
   ArrowLeft,
   Printer,
-  Wifi,
   ExternalLink,
   Copy,
   Check,
   Store,
-  Sparkles,
+  Globe,
 } from "lucide-react"
 import Link from "next/link"
 import { CafeDto } from "@/types/menu"
 import { ApiClient } from "@/services/apiClient"
+import { getAppBaseUrl, buildQrTargetUrl } from "@/lib/urlUtils"
 
 export default function QrDashboardPage() {
   const [cafes, setCafes] = useState<CafeDto[]>([])
   const [selectedCafeId, setSelectedCafeId] = useState<string>("a1b2c3d4-e5f6-4a5b-8c9d-0123456789ab")
-  const [networkHost, setNetworkHost] = useState<string>("192.168.1.2:3000")
-  const [useLocalhost, setUseLocalhost] = useState<boolean>(false)
+  const [baseUrl, setBaseUrl] = useState<string>("")
   const [copiedTable, setCopiedTable] = useState<number | null>(null)
 
   useEffect(() => {
@@ -39,16 +38,10 @@ export default function QrDashboardPage() {
     }
     loadCafes()
 
-    if (typeof window !== "undefined") {
-      const host = window.location.host
-      if (!host.includes("localhost") && !host.includes("127.0.0.1")) {
-        setNetworkHost(host)
-      }
-    }
+    setBaseUrl(getAppBaseUrl())
   }, [])
 
   const currentCafe = cafes.find((c) => c.id === selectedCafeId)
-  const host = useLocalhost ? "localhost:3000" : networkHost
 
   const handleCopy = (url: string, tableNum: number) => {
     navigator.clipboard?.writeText(url)
@@ -94,7 +87,7 @@ export default function QrDashboardPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
           {/* Cafe Switcher */}
           <div className="bg-neutral-900/90 border border-neutral-800 p-4 rounded-2xl">
-            <span className="block text-xs font-bold text-neutral-300 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+            <span className="text-xs font-bold text-neutral-300 uppercase tracking-wider mb-2 flex items-center gap-1.5">
               <Store className="w-3.5 h-3.5 text-amber-400" />
               Aktif Kafe (Veritabanından)
             </span>
@@ -115,51 +108,37 @@ export default function QrDashboardPage() {
             </div>
           </div>
 
-          {/* Network Host Settings */}
+          {/* Dynamic Base URL Settings */}
           <div className="bg-neutral-900/90 border border-neutral-800 p-4 rounded-2xl">
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs font-bold text-neutral-300 uppercase tracking-wider flex items-center gap-1.5">
-                <Wifi className="w-3.5 h-3.5 text-emerald-400" />
-                Ağ & Telefon Bağlantı IP
+                <Globe className="w-3.5 h-3.5 text-emerald-400" />
+                Hedef Yayın Adresi (Base URL)
               </span>
-              <div className="flex items-center gap-1 bg-neutral-950 p-0.5 rounded-lg border border-neutral-800">
-                <button
-                  onClick={() => setUseLocalhost(false)}
-                  className={`px-2 py-1 rounded-md text-[10px] font-semibold transition-all cursor-pointer ${
-                    !useLocalhost ? "bg-emerald-500 text-neutral-950" : "text-neutral-400"
-                  }`}
-                >
-                  Wi-Fi (Mobil)
-                </button>
-                <button
-                  onClick={() => setUseLocalhost(true)}
-                  className={`px-2 py-1 rounded-md text-[10px] font-semibold transition-all cursor-pointer ${
-                    useLocalhost ? "bg-neutral-700 text-white" : "text-neutral-400"
-                  }`}
-                >
-                  Localhost
-                </button>
-              </div>
+              <span className="text-[10px] bg-emerald-500/15 text-emerald-400 px-2 py-0.5 rounded-full font-mono border border-emerald-500/20">
+                Production
+              </span>
             </div>
 
-            {!useLocalhost ? (
-              <div className="flex items-center gap-2">
-                <input
-                  type="text"
-                  value={networkHost}
-                  onChange={(e) => setNetworkHost(e.target.value)}
-                  placeholder="192.168.1.2:3000"
-                  className="flex-1 bg-neutral-950 border border-neutral-700 rounded-xl px-3 py-1.5 text-xs text-white font-mono focus:outline-none focus:border-amber-400"
-                />
-                <span className="text-[10px] text-neutral-400">
-                  (Telefon için cihazınızın yerel IP&apos;si)
-                </span>
-              </div>
-            ) : (
-              <p className="text-[11px] text-neutral-400">
-                Localhost bağlantısı yalnızca bu bilgisayarda test için uygundur.
-              </p>
-            )}
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                value={baseUrl}
+                onChange={(e) => setBaseUrl(e.target.value)}
+                placeholder="https://scratch-e6j4kgn11-berke-inan.vercel.app"
+                className="flex-1 bg-neutral-950 border border-neutral-700 rounded-xl px-3 py-1.5 text-xs text-white font-mono focus:outline-none focus:border-amber-400"
+              />
+              <button
+                onClick={() => setBaseUrl(getAppBaseUrl(true))}
+                title="Vercel adresine sıfırla"
+                className="px-2.5 py-1.5 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-[11px] font-semibold text-neutral-300 border border-neutral-700 transition-colors shrink-0 cursor-pointer"
+              >
+                Sıfırla
+              </button>
+            </div>
+            <p className="text-[10.5px] text-neutral-400 mt-1.5">
+              QR kodlar bu canlı adres üzerinden üretilir.
+            </p>
           </div>
         </div>
       </div>
@@ -179,7 +158,7 @@ export default function QrDashboardPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {[1, 2, 3, 4, 5].map((tableNum) => {
-            const tableUrl = `http://${host}/?cafeId=${selectedCafeId}&table=${tableNum}`
+            const tableUrl = buildQrTargetUrl(selectedCafeId, tableNum, baseUrl)
 
             return (
               <div
@@ -217,7 +196,7 @@ export default function QrDashboardPage() {
                 </div>
 
                 {/* URL Display */}
-                <div className="w-full mt-3 bg-neutral-950 print:bg-neutral-100 p-2 rounded-xl flex items-center justify-between border border-neutral-800 print:border-neutral-300">
+                <div className="w-full mt-3 bg-neutral-950 print:bg-neutral-100 p-2 rounded-xl flex items-center justify-between gap-2 border border-neutral-800 print:border-neutral-300">
                   <span className="font-mono text-[9px] text-neutral-400 print:text-neutral-700 truncate flex-1">
                     Masa {tableNum} Linki
                   </span>
