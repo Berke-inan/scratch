@@ -46,9 +46,9 @@ public class GeminiAiService : IAiService
         "- 'min_price': '100 TL üstü', 'en az 80 lira' gibi alt sınır varsa sayısal değer (örn: 100), yoksa null.\n" +
         "- '100-200 TL arası' gibi aralıklarda min_price: 100, max_price: 200 olmalıdır.\n\n" +
         "Dışlanan Etiketler (exclude_tags):\n" +
-        "- 'şekersiz' -> ['Şeker', 'Şekerli']\n" +
-        "- 'glutensiz' -> ['Gluten', 'Glüten', 'Gluten İçerir', 'Glüten İçerir']\n" +
-        "- 'sütsüz' / 'laktozsuz' -> ['Süt', 'Sütlü', 'Süt Ürünü İçerir']\n\n" +
+        "- 'şekersiz' -> ['Şekerli']\n" +
+        "- 'glutensiz' -> ['Gluten İçerir', 'Glüten İçerir']\n" +
+        "- 'sütsüz' / 'laktozsuz' -> ['Süt Ürünü İçerir', 'Sütlü']\n\n" +
         "Intent Kuralları:\n" +
         "- Genel selamlama / hal hatır ('merhaba', 'selam', 'nasılsın') -> intent: 'chat', category: null, search_keywords: [], exclude_tags: [], price_preference: 'none', max_price: null, min_price: null.\n" +
         "- Kod yazma, sistem hackleme veya kafe dışı konular -> intent: 'out_of_scope'.\n" +
@@ -478,22 +478,17 @@ public class GeminiAiService : IAiService
         // Dışlanan etiketler
         if (norm.Contains("sekersiz") || norm.Contains("seker icermeyen"))
         {
-            excludeTags.Add("Şeker");
             excludeTags.Add("Şekerli");
         }
 
         if (norm.Contains("glutensiz") || norm.Contains("gluten icermeyen") || norm.Contains("colyak"))
         {
-            excludeTags.Add("Gluten");
-            excludeTags.Add("Glüten");
             excludeTags.Add("Gluten İçerir");
             excludeTags.Add("Glüten İçerir");
         }
 
         if (norm.Contains("sutsuz") || norm.Contains("sut icermeyen") || norm.Contains("laktozsuz"))
         {
-            excludeTags.Add("Süt");
-            excludeTags.Add("Sütlü");
             excludeTags.Add("Süt Ürünü İçerir");
         }
 

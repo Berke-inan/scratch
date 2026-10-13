@@ -494,8 +494,23 @@ export class ApiClient {
       // Gluten-free filter
       if (lower.includes("glutensiz") || lower.includes("glütensiz")) {
         matched = matched.filter(
-          (p) => !p.tags.some((t) => t.toLowerCase().includes("gluten") || t.toLowerCase().includes("glüten"))
+          (p) =>
+            !p.tags.some(
+              (t) =>
+                t.toLowerCase().includes("gluten içerir") ||
+                t.toLowerCase().includes("glüten içerir") ||
+                t.toLowerCase() === "gluten" ||
+                t.toLowerCase() === "glüten"
+            )
         )
+        const explicitGlutenFree = matched.filter(
+          (p) =>
+            p.tags.some((t) => t.toLowerCase().includes("glutensiz")) ||
+            p.name.toLowerCase().includes("glutensiz")
+        )
+        if (explicitGlutenFree.length > 0) {
+          matched = explicitGlutenFree
+        }
       }
 
       // Vegetarian & meat-free filter

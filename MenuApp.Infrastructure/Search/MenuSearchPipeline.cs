@@ -105,10 +105,10 @@ public class MenuSearchPipeline
             var pName = GeminiAiService.NormalizeText(p.Name);
             var pTags = p.Tags.Select(t => GeminiAiService.NormalizeText(t.Name)).ToList();
 
-            // AI veya kullanıcı tarafından belirtilen exclude_tags
+            // AI veya kullanıcı tarafından belirtilen exclude_tags (Yokluk/arınmışlık ekleri korumasıyla)
             foreach (var neg in negativeTags)
             {
-                if (pTags.Any(t => t.Contains(neg)) || pName.Contains(neg))
+                if (IsNegativeMatch(pName, neg) || pTags.Any(t => IsNegativeMatch(t, neg)))
                 {
                     return false;
                 }
@@ -117,8 +117,7 @@ public class MenuSearchPipeline
             // Süt / Laktoz Elemesi
             if (wantsDairyFree)
             {
-                if (pTags.Any(t => t.Contains("sut") && !t.Contains("sutsuz"))) return false;
-                if (pTags.Any(t => t.Contains("sut urunu icerir"))) return false;
+                if (pTags.Any(t => IsNegativeMatch(t, "sut"))) return false;
                 if (pName.Contains("latte") || pName.Contains("cappuccino") || pName.Contains("flat white") ||
                     pName.Contains("mocha") || pName.Contains("frappe"))
                 {
@@ -129,13 +128,13 @@ public class MenuSearchPipeline
             // Şeker Elemesi
             if (wantsSugarFree)
             {
-                if (pTags.Any(t => t.Equals("sekerli") || t.Contains("seker icerir"))) return false;
+                if (pTags.Any(t => IsNegativeMatch(t, "seker"))) return false;
             }
 
             // Gluten Elemesi
             if (wantsGlutenFree)
             {
-                if (pTags.Any(t => t.Contains("gluten icerir") || t.Equals("gluten"))) return false;
+                if (pTags.Any(t => IsNegativeMatch(t, "gluten"))) return false;
             }
 
             // Et / Tavuk Elemesi
@@ -191,6 +190,20 @@ public class MenuSearchPipeline
             candidates = candidates.Where(p =>
                 p.Tags.Any(t => GeminiAiService.NormalizeText(t.Name).Equals("vegan"))
             ).ToList();
+        }
+
+        // Glutensiz Kriteri (Zorunlu Kriter)
+        if (wantsGlutenFree)
+        {
+            var glutenFreeMatches = candidates.Where(p =>
+                p.Tags.Any(t => GeminiAiService.NormalizeText(t.Name).Contains("glutensiz")) ||
+                GeminiAiService.NormalizeText(p.Name).Contains("glutensiz")
+            ).ToList();
+
+            if (glutenFreeMatches.Count > 0)
+            {
+                candidates = glutenFreeMatches;
+            }
         }
 
         _logger.LogInformation(">>> [PIPELINE: STAGE 3] Zorunlu kriterler sonrası kalan ürün sayısı: {Count}", candidates.Count);
@@ -288,5 +301,60 @@ public class MenuSearchPipeline
                 .Select(x => x.Product)
                 .ToList();
         }
+    }
+
+    private static bool IsNegativeMatch(string targetText, string neg)
+    {
+        if (string.IsNullOrWhiteSpace(targetText) || string.IsNullOrWhiteSpace(neg)) return false;
+
+        var cleanTarget = GeminiAiService.NormalizeText(targetText);
+        var cleanNeg = GeminiAiService.NormalizeText(neg);
+
+        // 1. Gluten Kontrolü
+        if (cleanNeg.Contains("gluten"))
+        {
+            // Eğer hedefte "glutensiz" geçiyorsa KESİNLİKLE elenmez!
+            if (cleanTarget.Contains("glutensiz")) return false;
+            return cleanTarget.Contains("gluten icerir") || cleanTarget.Equals("gluten") || cleanTarget.Equals("glutenli");
+        }
+
+        // 2. Şeker Kontrolü
+        if (cleanNeg.Contains("seker"))
+        {
+            // Eğer hedefte "sekersiz" geçiyorsa KESİNLİKLE elenmez!
+            if (cleanTarget.Contains("sekersiz")) return false;
+            return cleanTarget.Contains("sekerli") || cleanTarget.Contains("seker icerir") || cleanTarget.Equals("seker");
+        }
+
+        // 3. Süt Kontrolü
+        if (cleanNeg.Contains("sut"))
+        {
+            // Eğer hedefte "sutsuz" veya "laktozsuz" geçiyorsa KESİNLİKLE elenmez!
+            if (cleanTarget.Contains("sutsuz") || cleanTarget.Contains("laktozsuz")) return false;
+            return cleanTarget.Contains("sutlu") || cleanTarget.Contains("sut urunu icerir") || cleanTarget.Equals("sut");
+        }
+
+        // 4. Laktoz Kontrolü
+        if (cleanNeg.Contains("laktoz"))
+        {
+            if (cleanTarget.Contains("laktozsuz")) return false;
+            return cleanTarget.Contains("laktoz icerir") || cleanTarget.Equals("laktoz") || cleanTarget.Equals("laktozlu");
+        }
+
+        // 5. Kafein Kontrolü
+        if (cleanNeg.Contains("kafein"))
+        {
+            if (cleanTarget.Contains("kafeinsiz")) return false;
+            return cleanTarget.Contains("kafeinli") || cleanTarget.Equals("kafein");
+        }
+
+        // 6. Et Kontrolü
+        if (cleanNeg.Contains("et"))
+        {
+            if (cleanTarget.Contains("etsiz")) return false;
+            return cleanTarget.Equals("et") || cleanTarget.StartsWith("et ") || cleanTarget.Contains(" et ");
+        }
+
+        return cleanTarget.Equals(cleanNeg) || cleanTarget.Contains(cleanNeg);
     }
 }
