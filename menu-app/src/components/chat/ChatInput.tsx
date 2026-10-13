@@ -27,7 +27,7 @@ export function ChatInput({ theme, onSendMessage, disabled }: ChatInputProps) {
   // 1. Modern AI Site Input Bar (ChatGPT / Claude / Gemini)
   if (theme === "ai-chat") {
     return (
-      <div className="p-3 bg-neutral-50/90 dark:bg-neutral-950/90 border-t border-neutral-200/80 dark:border-neutral-800/80 backdrop-blur-md">
+      <div className="p-2.5 pb-2 sm:p-3 sm:pb-3 bg-neutral-50/90 dark:bg-neutral-950/90 border-t border-neutral-200/80 dark:border-neutral-800/80 backdrop-blur-md shrink-0">
         <form
           onSubmit={handleSubmit}
           className="relative flex items-center bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700/80 rounded-2xl shadow-sm focus-within:ring-2 focus-within:ring-purple-500/20 focus-within:border-purple-500 transition-all p-1.5"
@@ -57,10 +57,6 @@ export function ChatInput({ theme, onSendMessage, disabled }: ChatInputProps) {
             <ArrowUp className="w-4 h-4" />
           </button>
         </form>
-
-        <p className="text-[10px] text-center text-neutral-400 dark:text-neutral-400 mt-1.5 select-none">
-          Yapay zeka menü içeriklerini filtreler • Alerjilerinizi lütfen garsona bildiriniz.
-        </p>
       </div>
     )
   }
@@ -70,7 +66,7 @@ export function ChatInput({ theme, onSendMessage, disabled }: ChatInputProps) {
     return (
       <form
         onSubmit={handleSubmit}
-        className="flex items-center gap-2 p-2.5 bg-[#F0F2F5] dark:bg-[#202C33] border-t border-neutral-300 dark:border-neutral-800"
+        className="flex items-center gap-2 p-2.5 pb-2 sm:pb-2.5 bg-[#F0F2F5] dark:bg-[#202C33] border-t border-neutral-300 dark:border-neutral-800 shrink-0"
       >
         <input
           type="text"
@@ -101,7 +97,7 @@ export function ChatInput({ theme, onSendMessage, disabled }: ChatInputProps) {
     return (
       <form
         onSubmit={handleSubmit}
-        className="flex items-center p-2.5 bg-white/85 dark:bg-neutral-900/85 backdrop-blur-md border-t border-neutral-200 dark:border-neutral-800"
+        className="flex items-center p-2.5 pb-2 sm:pb-2.5 bg-white/85 dark:bg-neutral-900/85 backdrop-blur-md border-t border-neutral-200 dark:border-neutral-800 shrink-0"
       >
         <div className="flex-1 flex items-center bg-neutral-100 dark:bg-neutral-800 rounded-full px-3.5 py-1.5 border border-neutral-300/60 dark:border-neutral-700/60 focus-within:border-blue-500/50 transition-colors">
           <input
@@ -132,7 +128,7 @@ export function ChatInput({ theme, onSendMessage, disabled }: ChatInputProps) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex items-center gap-2 p-3 bg-white dark:bg-neutral-900 border-t border-neutral-200 dark:border-neutral-800"
+      className="flex items-center gap-2 p-3 pb-2 sm:pb-3 bg-white dark:bg-neutral-900 border-t border-neutral-200 dark:border-neutral-800 shrink-0"
     >
       <div className="flex-1 flex items-center bg-neutral-100 dark:bg-neutral-800 rounded-3xl px-4 py-2 border border-neutral-200 dark:border-neutral-700 focus-within:border-[#2C80FF]/50 transition-colors">
         <input

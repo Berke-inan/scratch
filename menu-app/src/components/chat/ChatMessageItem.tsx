@@ -2,8 +2,18 @@
 
 import React, { useState } from "react"
 import { ChatMessage, ChatTheme } from "@/types/chat"
-import { ProductCard } from "@/components/menu/ProductCard"
-import { Check, CheckCheck, Sparkles, Copy, CheckCheck as CopiedIcon, ThumbsUp, ThumbsDown } from "lucide-react"
+import { CompactProductRow } from "./CompactProductRow"
+import { ProductDetailBottomSheet } from "./ProductDetailBottomSheet"
+import {
+  Check,
+  CheckCheck,
+  Sparkles,
+  Copy,
+  CheckCheck as CopiedIcon,
+  ThumbsUp,
+  ThumbsDown,
+  ArrowRight,
+} from "lucide-react"
 
 interface ChatMessageItemProps {
   message: ChatMessage
@@ -13,11 +23,69 @@ interface ChatMessageItemProps {
 export function ChatMessageItem({ message, theme }: ChatMessageItemProps) {
   const isUser = message.sender === "user"
   const [isCopied, setIsCopied] = useState(false)
+  const [isSheetOpen, setIsSheetOpen] = useState(false)
+  const [selectedProductId, setSelectedProductId] = useState<string | number | null>(null)
 
   const handleCopy = () => {
     navigator.clipboard?.writeText(message.text)
     setIsCopied(true)
     setTimeout(() => setIsCopied(false), 2000)
+  }
+
+  // Micro-List Rows & Bottom Sheet Renderer
+  const renderProductMicroList = () => {
+    if (!message.products || message.products.length === 0) return null
+
+    const displayProducts = message.products.slice(0, 3)
+    const hasMore = message.products.length > 3
+
+    return (
+      <div className="w-full mt-2.5 space-y-1.5">
+        <div className="text-[11px] font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider px-1 flex items-center justify-between">
+          <span>Önerilen Lezzetler ({message.products.length}):</span>
+          <span className="text-[10px] text-amber-600 dark:text-amber-400 font-normal lowercase tracking-normal">
+            Detay için tıkla
+          </span>
+        </div>
+
+        {/* Kompakt Satırlar (Her biri 40-44px) */}
+        <div className="space-y-1.5">
+          {displayProducts.map((product) => (
+            <CompactProductRow
+              key={product.id}
+              product={product}
+              onClick={() => {
+                setSelectedProductId(product.id)
+                setIsSheetOpen(true)
+              }}
+            />
+          ))}
+        </div>
+
+        {/* 3'ten Fazla Ürün Varsa 'Tümünü İncele' Butonu */}
+        {hasMore && (
+          <button
+            onClick={() => {
+              setSelectedProductId(null)
+              setIsSheetOpen(true)
+            }}
+            className="w-full h-10 mt-1 flex items-center justify-center gap-1.5 text-xs font-semibold text-amber-700 dark:text-amber-300 bg-amber-50/90 dark:bg-amber-950/40 hover:bg-amber-100 dark:hover:bg-amber-900/40 border border-amber-200/80 dark:border-amber-800/80 rounded-xl transition-all cursor-pointer shadow-2xs group"
+          >
+            <span>🍽️ Tüm {message.products.length} Lezzeti İncele</span>
+            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+          </button>
+        )}
+
+        {/* Detay Bottom Sheet / Alt Çekmece */}
+        {isSheetOpen && (
+          <ProductDetailBottomSheet
+            products={message.products}
+            initialSelectedProductId={selectedProductId}
+            onClose={() => setIsSheetOpen(false)}
+          />
+        )}
+      </div>
+    )
   }
 
   // Modern AI Site Style (ChatGPT / Claude / Gemini)
@@ -85,40 +153,8 @@ export function ChatMessageItem({ message, theme }: ChatMessageItemProps) {
             </div>
           </div>
 
-          {/* Embedded Products Horizontal Carousel */}
-          {message.products && message.products.length > 0 && (
-            <div className="w-full mt-2.5 space-y-1.5">
-              <div className="text-[11px] font-semibold text-neutral-500 uppercase tracking-wider px-1 flex items-center justify-between">
-                <span>Eşleşen Menü Lezzetleri ({message.products.length}):</span>
-                {message.products.length > 1 && (
-                  <span className="text-[10px] text-neutral-400 font-normal lowercase tracking-normal">
-                    ← kaydır →
-                  </span>
-                )}
-              </div>
-              <div className="flex flex-row gap-3 overflow-x-auto pb-3 pt-1 snap-x snap-mandatory scrollbar-none no-scrollbar">
-                {message.products.map((product) => (
-                  <div
-                    key={product.id}
-                    className="min-w-[260px] max-w-[280px] flex-shrink-0 snap-start"
-                  >
-                    <ProductCard
-                      compact
-                      product={{
-                        id: product.id,
-                        name: product.name,
-                        description: product.description || "",
-                        price: product.price,
-                        currency: "₺",
-                        tags: product.tags,
-                      }}
-                      className="w-full h-full bg-white dark:bg-neutral-900/95 border-neutral-200 dark:border-neutral-800 shadow-sm"
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+          {/* Embedded Micro-List Rows */}
+          {renderProductMicroList()}
         </div>
       </div>
     )
@@ -181,40 +217,8 @@ export function ChatMessageItem({ message, theme }: ChatMessageItemProps) {
         </div>
       </div>
 
-      {/* Embedded Products Horizontal Carousel */}
-      {message.products && message.products.length > 0 && (
-        <div className="w-full max-w-full mt-2 space-y-1.5">
-          <div className="text-[11px] font-medium text-neutral-500 dark:text-neutral-400 px-1 flex items-center justify-between">
-            <span>Önerilen Ürünler ({message.products.length}):</span>
-            {message.products.length > 1 && (
-              <span className="text-[10px] text-neutral-400 font-normal lowercase tracking-normal">
-                ← kaydır →
-              </span>
-            )}
-          </div>
-          <div className="flex flex-row gap-3 overflow-x-auto pb-3 pt-1 snap-x snap-mandatory scrollbar-none no-scrollbar">
-            {message.products.map((product) => (
-              <div
-                key={product.id}
-                className="min-w-[260px] max-w-[280px] flex-shrink-0 snap-start"
-              >
-                <ProductCard
-                  compact
-                  product={{
-                    id: product.id,
-                    name: product.name,
-                    description: product.description || "",
-                    price: product.price,
-                    currency: "₺",
-                    tags: product.tags,
-                  }}
-                  className="w-full h-full bg-white/95 dark:bg-neutral-900/95 border-neutral-200 dark:border-neutral-800 shadow-sm"
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+      {/* Embedded Micro-List Rows */}
+      {renderProductMicroList()}
     </div>
   )
 }

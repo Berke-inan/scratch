@@ -16,9 +16,15 @@ function MainAppContent() {
       <PresentationToolbar />
 
       {/* 2. Main Content Area Switcher */}
-      <main className="flex-1 w-full max-w-4xl mx-auto p-3 sm:p-6 flex flex-col justify-center items-center">
+      <main
+        className={`flex-1 w-full mx-auto flex flex-col ${
+          mode === "chat-only"
+            ? "p-0 sm:p-6 sm:max-w-4xl sm:justify-center sm:items-center"
+            : "max-w-4xl p-3 sm:p-6 justify-center items-center"
+        }`}
+      >
         {mode === "chat-only" ? (
-          <div className="w-full flex justify-center py-2 animate-in fade-in zoom-in-95 duration-200">
+          <div className="w-full h-full flex-1 flex justify-center p-0 sm:py-2 animate-in fade-in duration-200">
             <ChatWindow />
           </div>
         ) : (

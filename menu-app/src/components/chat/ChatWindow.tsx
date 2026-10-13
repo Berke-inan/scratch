@@ -133,13 +133,13 @@ export function ChatWindow() {
 
   return (
     <div
-      className={`flex flex-col h-[680px] max-h-[82vh] w-full max-w-md mx-auto rounded-3xl overflow-hidden border border-neutral-300 dark:border-neutral-800 shadow-2xl transition-colors duration-200 ${getContainerBg()}`}
+      className={`flex flex-col w-full h-full min-h-[calc(100dvh-57px)] sm:min-h-0 sm:h-[680px] sm:max-h-[82vh] sm:max-w-md sm:mx-auto rounded-none sm:rounded-3xl overflow-hidden border-0 sm:border border-neutral-300 dark:border-neutral-800 shadow-none sm:shadow-2xl transition-colors duration-200 ${getContainerBg()}`}
     >
       {/* Platform Header */}
       {renderHeader()}
 
       {/* Messages Scroll Area with scroll-pt-16 padding */}
-      <div className="flex-1 overflow-y-auto px-4 py-3 space-y-1 scroll-pt-16">
+      <div className="flex-1 overflow-y-auto px-3 sm:px-4 py-3 space-y-1 scroll-pt-16">
         {messages.map((msg, index) => {
           const isLatestAiMessage = index === lastAiMessageIndex
 
