@@ -85,26 +85,36 @@ export function ChatMessageItem({ message, theme }: ChatMessageItemProps) {
             </div>
           </div>
 
-          {/* Embedded Products Grid */}
+          {/* Embedded Products Horizontal Carousel */}
           {message.products && message.products.length > 0 && (
-            <div className="w-full mt-2.5 space-y-2">
-              <div className="text-[11px] font-semibold text-neutral-500 uppercase tracking-wider px-1">
-                Eşleşen Menü Lezzetleri ({message.products.length}):
+            <div className="w-full mt-2.5 space-y-1.5">
+              <div className="text-[11px] font-semibold text-neutral-500 uppercase tracking-wider px-1 flex items-center justify-between">
+                <span>Eşleşen Menü Lezzetleri ({message.products.length}):</span>
+                {message.products.length > 1 && (
+                  <span className="text-[10px] text-neutral-400 font-normal lowercase tracking-normal">
+                    ← kaydır →
+                  </span>
+                )}
               </div>
-              <div className="grid grid-cols-1 gap-2">
+              <div className="flex flex-row gap-3 overflow-x-auto pb-3 pt-1 snap-x snap-mandatory scrollbar-none no-scrollbar">
                 {message.products.map((product) => (
-                  <ProductCard
+                  <div
                     key={product.id}
-                    product={{
-                      id: product.id,
-                      name: product.name,
-                      description: product.description || "",
-                      price: product.price,
-                      currency: "₺",
-                      tags: product.tags,
-                    }}
-                    className="bg-white dark:bg-neutral-900/95 border-neutral-200 dark:border-neutral-800 shadow-sm"
-                  />
+                    className="min-w-[260px] max-w-[280px] flex-shrink-0 snap-start"
+                  >
+                    <ProductCard
+                      compact
+                      product={{
+                        id: product.id,
+                        name: product.name,
+                        description: product.description || "",
+                        price: product.price,
+                        currency: "₺",
+                        tags: product.tags,
+                      }}
+                      className="w-full h-full bg-white dark:bg-neutral-900/95 border-neutral-200 dark:border-neutral-800 shadow-sm"
+                    />
+                  </div>
                 ))}
               </div>
             </div>
@@ -171,26 +181,36 @@ export function ChatMessageItem({ message, theme }: ChatMessageItemProps) {
         </div>
       </div>
 
-      {/* Embedded Products Carousel/Grid when AI returns products */}
+      {/* Embedded Products Horizontal Carousel */}
       {message.products && message.products.length > 0 && (
-        <div className="w-full max-w-sm sm:max-w-md mt-2 space-y-2">
-          <div className="text-[11px] font-medium text-neutral-500 dark:text-neutral-400 px-1">
-            Önerilen Ürünler ({message.products.length}):
+        <div className="w-full max-w-full mt-2 space-y-1.5">
+          <div className="text-[11px] font-medium text-neutral-500 dark:text-neutral-400 px-1 flex items-center justify-between">
+            <span>Önerilen Ürünler ({message.products.length}):</span>
+            {message.products.length > 1 && (
+              <span className="text-[10px] text-neutral-400 font-normal lowercase tracking-normal">
+                ← kaydır →
+              </span>
+            )}
           </div>
-          <div className="grid grid-cols-1 gap-2">
+          <div className="flex flex-row gap-3 overflow-x-auto pb-3 pt-1 snap-x snap-mandatory scrollbar-none no-scrollbar">
             {message.products.map((product) => (
-              <ProductCard
+              <div
                 key={product.id}
-                product={{
-                  id: product.id,
-                  name: product.name,
-                  description: product.description || "",
-                  price: product.price,
-                  currency: "₺",
-                  tags: product.tags,
-                }}
-                className="bg-white/95 dark:bg-neutral-900/95 border-neutral-200 dark:border-neutral-800 shadow-sm"
-              />
+                className="min-w-[260px] max-w-[280px] flex-shrink-0 snap-start"
+              >
+                <ProductCard
+                  compact
+                  product={{
+                    id: product.id,
+                    name: product.name,
+                    description: product.description || "",
+                    price: product.price,
+                    currency: "₺",
+                    tags: product.tags,
+                  }}
+                  className="w-full h-full bg-white/95 dark:bg-neutral-900/95 border-neutral-200 dark:border-neutral-800 shadow-sm"
+                />
+              </div>
             ))}
           </div>
         </div>

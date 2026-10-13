@@ -12,16 +12,28 @@ import {
 export function ChatWindow() {
   const { messages, theme, activeCafe, sendMessage, isTyping } = useApp()
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const lastAiMessageRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+    const lastMessage = messages[messages.length - 1]
+
+    if (lastMessage?.sender === "assistant") {
+      // AI yanıtı tamamlandığında son gelen AI mesajının tepe noktasına yumuşakça odaklan
+      lastAiMessageRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      })
+    } else {
+      // Kullanıcı mesaj gönderdiğinde veya AI yazıyor göstergesi aktifken en alta in
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+    }
   }, [messages, isTyping])
 
   // Header per theme
   const renderHeader = () => {
     if (theme === "whatsapp") {
       return (
-        <div className="flex items-center px-4 py-3 bg-[#075E54] dark:bg-[#1F2C34] text-white shadow-sm z-10">
+        <div className="flex items-center px-4 py-3 bg-[#075E54] dark:bg-[#1F2C34] text-white shadow-sm z-10 shrink-0">
           <div className="flex items-center gap-3">
             <div className="relative">
               <div className="w-10 h-10 rounded-full bg-emerald-700 flex items-center justify-center font-bold text-sm border border-emerald-400/40 shadow-xs">
@@ -42,7 +54,7 @@ export function ChatWindow() {
 
     if (theme === "imessage") {
       return (
-        <div className="flex flex-col items-center justify-center px-4 py-2.5 bg-neutral-100/85 dark:bg-neutral-900/85 backdrop-blur-xl border-b border-neutral-200 dark:border-neutral-800 z-10">
+        <div className="flex flex-col items-center justify-center px-4 py-2.5 bg-neutral-100/85 dark:bg-neutral-900/85 backdrop-blur-xl border-b border-neutral-200 dark:border-neutral-800 z-10 shrink-0">
           <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-500 text-white flex items-center justify-center text-xs font-bold shadow-sm mb-1">
             <Sparkles className="w-4 h-4" />
           </div>
@@ -58,7 +70,7 @@ export function ChatWindow() {
 
     if (theme === "oneui") {
       return (
-        <div className="px-5 py-4 bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-800 z-10">
+        <div className="px-5 py-4 bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-800 z-10 shrink-0">
           <h2 className="text-lg font-bold text-neutral-900 dark:text-neutral-100 tracking-tight leading-tight">
             {activeCafe?.name || "Akıllı Menü Asistanı"}
           </h2>
@@ -71,7 +83,7 @@ export function ChatWindow() {
 
     // Modern AI (ChatGPT / Claude / Gemini Style - Default)
     return (
-      <div className="flex items-center justify-between px-4 py-3 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md border-b border-neutral-200/80 dark:border-neutral-800/80 z-10 shadow-xs">
+      <div className="flex items-center justify-between px-4 py-3 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md border-b border-neutral-200/80 dark:border-neutral-800/80 z-10 shadow-xs shrink-0">
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-purple-600 via-indigo-600 to-amber-500 text-white flex items-center justify-center text-xs font-bold shadow-md">
             <Sparkles className="w-4 h-4 text-white" />
@@ -113,6 +125,12 @@ export function ChatWindow() {
     }
   }
 
+  // Find index of the most recent assistant message
+  const lastAiMessageIndex = messages
+    .map((m, i) => (m.sender === "assistant" ? i : -1))
+    .filter((i) => i !== -1)
+    .pop()
+
   return (
     <div
       className={`flex flex-col h-[680px] max-h-[82vh] w-full max-w-md mx-auto rounded-3xl overflow-hidden border border-neutral-300 dark:border-neutral-800 shadow-2xl transition-colors duration-200 ${getContainerBg()}`}
@@ -120,11 +138,21 @@ export function ChatWindow() {
       {/* Platform Header */}
       {renderHeader()}
 
-      {/* Messages Scroll Area */}
-      <div className="flex-1 overflow-y-auto px-4 py-3 space-y-1">
-        {messages.map((msg) => (
-          <ChatMessageItem key={msg.id} message={msg} theme={theme} />
-        ))}
+      {/* Messages Scroll Area with scroll-pt-16 padding */}
+      <div className="flex-1 overflow-y-auto px-4 py-3 space-y-1 scroll-pt-16">
+        {messages.map((msg, index) => {
+          const isLatestAiMessage = index === lastAiMessageIndex
+
+          return (
+            <div
+              key={msg.id}
+              ref={isLatestAiMessage ? lastAiMessageRef : null}
+              className={isLatestAiMessage ? "scroll-mt-4" : ""}
+            >
+              <ChatMessageItem message={msg} theme={theme} />
+            </div>
+          )
+        })}
 
         {/* Typing indicator */}
         {isTyping && (
