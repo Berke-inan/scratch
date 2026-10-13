@@ -193,7 +193,7 @@ export class ApiClient {
       return {
         cafeId: cafeId?.trim() || FALLBACK_CAFE.id,
         cafeName: FALLBACK_CAFE.name,
-        welcomeMessage: `${FALLBACK_CAFE.name}'e hoş geldiniz! Ben menü asistanınızım. Bugün canınız nasıl bir lezzet çekiyor?`,
+        welcomeMessage: `Merhaba! ${FALLBACK_CAFE.name} menüsüne hoş geldiniz. İster filtre kahve, ister glutensiz veya şekersiz lezzetler ya da bütçenize uygun seçenekler olsun; ne arzu ederseniz yardımcı olabilirim.`,
       }
     }
   }
@@ -226,7 +226,7 @@ export class ApiClient {
         lower.includes("nasılsın")
       ) {
         return {
-          message: "Merhaba! Hoş geldiniz, bugün canınız nasıl bir lezzet çekiyor? Menümüzden dilediğinizi sorabilirsiniz.",
+          message: "Merhaba! Menümüzden ne arzu edersiniz, size yardımcı olabilirim.",
           products: [],
         }
       }
@@ -234,14 +234,14 @@ export class ApiClient {
       // Smart client-side fallback matching
       let matched = [...FALLBACK_PRODUCTS]
 
-      if (lower.includes("kahve") || lower.includes("latte") || lower.includes("espresso")) {
-        matched = matched.filter((p) => p.categoryName.includes("Kahve"))
+      if (lower.includes("kahvaltı") || lower.includes("kahvalti") || lower.includes("tost") || lower.includes("atıştır")) {
+        matched = matched.filter((p) => p.categoryName.includes("Atıştırmalık"))
+      } else if (lower.includes("kola") || lower.includes("gazoz") || lower.includes("meşrubat") || lower.includes("içecek")) {
+        matched = matched.filter((p) => p.categoryName.includes("Soğuk İçecek"))
       } else if (lower.includes("tatlı") || lower.includes("pasta") || lower.includes("cheesecake")) {
         matched = matched.filter((p) => p.categoryName.includes("Tatlı"))
-      } else if (lower.includes("tost") || lower.includes("atıştır")) {
-        matched = matched.filter((p) => p.categoryName.includes("Atıştırmalık"))
-      } else if (lower.includes("kola") || lower.includes("gazoz") || lower.includes("içecek")) {
-        matched = matched.filter((p) => p.categoryName.includes("Soğuk İçecek"))
+      } else if (lower.includes("kahve") || lower.includes("latte") || lower.includes("espresso")) {
+        matched = matched.filter((p) => p.categoryName.includes("Kahve"))
       }
 
       // Temperature filter
@@ -249,6 +249,22 @@ export class ApiClient {
         matched = matched.filter((p) => p.tags.includes("Sıcak") || p.categoryName.includes("Sıcak"))
       } else if (lower.includes("soğuk")) {
         matched = matched.filter((p) => p.tags.includes("Soğuk") || p.categoryName.includes("Soğuk"))
+      }
+
+      // Price limit (e.g. 150 TL altı)
+      const maxPriceMatch = lower.match(/(?:en\s+fazla|maksimum|max)\s*(\d+)|(\d+)\s*(?:tl|lira|₺)?\s*(?:altı|altında|kadar)/)
+      let maxPrice: number | null = null
+      if (maxPriceMatch) {
+        maxPrice = parseFloat(maxPriceMatch[1] || maxPriceMatch[2])
+        if (!isNaN(maxPrice)) {
+          matched = matched.filter((p) => p.price <= maxPrice!)
+        }
+      }
+
+      // Price sorting (cheap)
+      const isCheap = lower.includes("ucuz") || lower.includes("uygun") || lower.includes("hesaplı") || lower.includes("ekonomik")
+      if (isCheap) {
+        matched = matched.sort((a, b) => a.price - b.price)
       }
 
       // Sugar filter
@@ -328,10 +344,18 @@ export class ApiClient {
         matched = matched.filter((p) => p.tags.includes("Kafeinsiz") || p.name.toLowerCase().includes("kafeinsiz"))
       }
 
-      const msg =
-        matched.length > 0
-          ? `Sizin için menümüzden lezzetli seçenekler listelendi:`
-          : `Aradığınız kriterlere uygun ürün bulunamadı.`
+      let msg = "Sizin için menümüzden lezzetleri listeledim:"
+      if (isCheap) {
+        msg = "Sizin için menümüzdeki en uygun fiyatlı lezzetleri listeledim:"
+      } else if (maxPrice) {
+        msg = `Sizin için ${maxPrice} TL altındaki seçeneklerimizi listeledim:`
+      } else if (lower.includes("kahvaltı") || lower.includes("kahvalti")) {
+        msg = "Güne güzel bir başlangıç için kahvaltılık ve doyurucu alternatiflerimiz:"
+      }
+
+      if (matched.length === 0) {
+        msg = "Belirttiğiniz kriterlere uygun ürün bulunamadı. Farklı bir seçenek denemek ister misiniz?"
+      }
 
       return {
         message: msg,
