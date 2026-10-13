@@ -40,8 +40,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Register FluentValidation
 builder.Services.AddValidatorsFromAssemblyContaining<MenuQueryDtoValidator>();
 
-// Register AI Service & Menu Service
+// Register AI Service, Taxonomy Registry & Menu Service
 builder.Services.AddHttpClient<IAiService, GeminiAiService>();
+builder.Services.AddSingleton<ITaxonomyRegistry, MenuApp.Infrastructure.Search.TaxonomyRegistry>();
 builder.Services.AddScoped<IMenuService, MenuService>();
 
 // Configure .NET 8 Rate Limiter (Token Bucket: 60 requests per minute per IP)

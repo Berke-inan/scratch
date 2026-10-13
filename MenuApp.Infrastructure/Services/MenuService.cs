@@ -2,8 +2,10 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using MenuApp.Core.DTOs;
+using MenuApp.Core.Enums;
 using MenuApp.Core.Interfaces;
 using MenuApp.Infrastructure.Data;
+using MenuApp.Infrastructure.Search;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -13,6 +15,7 @@ public class MenuService : IMenuService
 {
     private readonly IAiService _aiService;
     private readonly ApplicationDbContext _dbContext;
+    private readonly ITaxonomyRegistry _taxonomyRegistry;
     private readonly ILogger<MenuService> _logger;
 
     private record AiIntentPayload(
@@ -29,10 +32,12 @@ public class MenuService : IMenuService
     public MenuService(
         IAiService aiService,
         ApplicationDbContext dbContext,
+        ITaxonomyRegistry taxonomyRegistry,
         ILogger<MenuService> logger)
     {
         _aiService = aiService;
         _dbContext = dbContext;
+        _taxonomyRegistry = taxonomyRegistry;
         _logger = logger;
     }
 
@@ -180,11 +185,11 @@ public class MenuService : IMenuService
             }
         }
 
-        // 5. Kategori Eşlemesi (5 Kanonik Kategori Normalizasyonu)
-        var canonicalCategory = MapToCanonicalCategory(intentPayload?.Category, norm);
+        // 5. Macro-Domain Tespiti (Katman 1: Kapsam ve Etki Alanı İzolasyonu)
+        var macroDomain = _taxonomyRegistry.ResolveMacroDomain(norm, intentPayload?.Category);
 
-        _logger.LogInformation(">>> [INTENT DETAILS] Kanonik Kategori: '{Category}', Fiyat Tercihi: '{PricePref}', MaxFiyat: {MaxPrice}, MinFiyat: {MinPrice}",
-            canonicalCategory ?? "Belirtilmedi", pricePreference, maxPrice, minPrice);
+        _logger.LogInformation(">>> [INTENT DETAILS] Makro Alan: '{MacroDomain}', Fiyat Tercihi: '{PricePref}', MaxFiyat: {MaxPrice}, MinFiyat: {MinPrice}",
+            macroDomain?.ToString() ?? "Genel (Tümü)", pricePreference, maxPrice, minPrice);
 
         // 6. Veritabanından Category ve Tags ilişkileriyle birlikte aktif ürünleri çek
         var baseQuery = _dbContext.Products
@@ -209,208 +214,22 @@ public class MenuService : IMenuService
             throw;
         }
 
-        var filtered = allAvailable;
+        // 7. Deterministik Arama, Filtreleme ve Skorlama Boru Hattı (MenuSearchPipeline)
+        var pipeline = new MenuSearchPipeline(_taxonomyRegistry, _logger);
+        var searchContext = new MenuSearchPipeline.SearchContext(
+            NormalizedQuery: norm,
+            MacroDomain: macroDomain,
+            AiCategory: intentPayload?.Category,
+            ExcludeTags: intentPayload?.ExcludeTags ?? new List<string>(),
+            SearchKeywords: intentPayload?.SearchKeywords ?? new List<string>(),
+            PricePreference: pricePreference,
+            MaxPrice: maxPrice,
+            MinPrice: minPrice
+        );
 
-        // 7. Kategori Filtrelemesi (5 Kanonik Kategoriye haritalanmış filtre)
-        if (!string.IsNullOrWhiteSpace(canonicalCategory))
-        {
-            var categoryMatches = filtered.Where(p =>
-                p.Category != null && (
-                    p.Category.Name.Equals(canonicalCategory, StringComparison.OrdinalIgnoreCase) ||
-                    p.Category.Name.Contains(canonicalCategory, StringComparison.OrdinalIgnoreCase)
-                )
-            ).ToList();
+        var filtered = pipeline.Execute(allAvailable, searchContext);
 
-            if (categoryMatches.Count > 0)
-            {
-                filtered = categoryMatches;
-                _logger.LogInformation(">>> [CATEGORY FILTER] '{Category}' kategorisine filtrelendi, ürün sayısı: {Count}", canonicalCategory, filtered.Count);
-            }
-        }
-
-        // 8. Anahtar Kelime Filtrelemesi (Spesifik ürünler için: tost, brownie, limonata vb.)
-        var specificKeywords = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-        if (intentPayload?.SearchKeywords != null)
-        {
-            foreach (var kw in intentPayload.SearchKeywords)
-            {
-                if (!string.IsNullOrWhiteSpace(kw))
-                {
-                    var cleanKw = GeminiAiService.NormalizeText(kw);
-                    if (cleanKw != "kahvalti" && cleanKw != "atistirmalik" && cleanKw != "tatli" &&
-                        cleanKw != "kahve" && cleanKw != "icecek" && cleanKw != "mesrubat" && cleanKw != "yemek")
-                    {
-                        specificKeywords.Add(cleanKw);
-                    }
-                }
-            }
-        }
-
-        var specificTerms = new[] { "tost", "sandvic", "kruvasan", "patates", "wrap", "bowl", "cheesecake", "brownie", "tiramisu", "kek", "latte", "espresso", "cappuccino", "americano", "frappe", "kola", "gazoz", "limonata" };
-        foreach (var term in specificTerms)
-        {
-            if (norm.Contains(term))
-            {
-                specificKeywords.Add(term);
-            }
-        }
-
-        if (specificKeywords.Count > 0)
-        {
-            var specificMatches = filtered.Where(p =>
-            {
-                var prodNormName = GeminiAiService.NormalizeText(p.Name);
-                var prodNormDesc = GeminiAiService.NormalizeText(p.Description ?? "");
-                return specificKeywords.Any(k => prodNormName.Contains(k) || prodNormDesc.Contains(k));
-            }).ToList();
-
-            // Eğer spesifik ürün eşleşmesi varsa onu daralt, yoksa kategorideki tüm ürünleri koru
-            if (specificMatches.Count > 0)
-            {
-                filtered = specificMatches;
-            }
-        }
-
-        // 9. Diyet, Alerjen ve Tercih Filtrelemeleri
-        var excludeList = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-        if (intentPayload?.ExcludeTags != null)
-        {
-            foreach (var tag in intentPayload.ExcludeTags)
-            {
-                if (!string.IsNullOrWhiteSpace(tag))
-                    excludeList.Add(GeminiAiService.NormalizeText(tag));
-            }
-        }
-
-        // Sıcaklık Filtrelemesi
-        bool wantsHot = norm.Contains("sicak") || norm.Contains("hot");
-        bool wantsCold = norm.Contains("soguk") || norm.Contains("cold") || norm.Contains("buzlu") || norm.Contains("iced");
-
-        if (wantsHot && !wantsCold)
-        {
-            var hotMatches = filtered.Where(p =>
-                p.Tags.Any(t => GeminiAiService.NormalizeText(t.Name).Contains("sicak")) ||
-                (p.Category != null && GeminiAiService.NormalizeText(p.Category.Name).StartsWith("sicak"))
-            ).ToList();
-
-            if (hotMatches.Count > 0) filtered = hotMatches;
-        }
-        else if (wantsCold && !wantsHot)
-        {
-            var coldMatches = filtered.Where(p =>
-                p.Tags.Any(t => GeminiAiService.NormalizeText(t.Name).Contains("soguk")) ||
-                (p.Category != null && GeminiAiService.NormalizeText(p.Category.Name).StartsWith("soguk"))
-            ).ToList();
-
-            if (coldMatches.Count > 0) filtered = coldMatches;
-        }
-
-        // Şeker Durumu
-        bool wantsSugarFree = norm.Contains("sekersiz") || norm.Contains("sugar-free") || norm.Contains("diyet");
-        if (wantsSugarFree)
-        {
-            excludeList.Add("seker");
-            excludeList.Add("sekerli");
-            filtered = filtered.Where(p => !p.Tags.Any(t => GeminiAiService.NormalizeText(t.Name).Equals("sekerli"))).ToList();
-        }
-
-        // Gluten Durumu
-        bool wantsGlutenFree = norm.Contains("glutensiz") || norm.Contains("gluten-free") || norm.Contains("colyak");
-        if (wantsGlutenFree)
-        {
-            excludeList.Add("gluten icerir");
-            excludeList.Add("gluten");
-            filtered = filtered.Where(p => !p.Tags.Any(t => GeminiAiService.NormalizeText(t.Name).Contains("gluten icerir"))).ToList();
-        }
-
-        // Süt Ürünü / Laktoz
-        bool wantsDairyFree = norm.Contains("sutsuz") || norm.Contains("laktozsuz") ||
-                              norm.Contains("sut istemiyorum") || norm.Contains("sut olmasin") || norm.Contains("sut alerji");
-        if (wantsDairyFree)
-        {
-            excludeList.Add("sut");
-            excludeList.Add("sutlu");
-            excludeList.Add("sut urunu icerir");
-            filtered = filtered.Where(p =>
-                !p.Tags.Any(t =>
-                {
-                    var tNorm = GeminiAiService.NormalizeText(t.Name);
-                    return tNorm.Contains("sut") && !tNorm.Contains("sutsuz");
-                }) &&
-                !p.Name.Contains("Latte", StringComparison.OrdinalIgnoreCase) &&
-                !p.Name.Contains("Cappuccino", StringComparison.OrdinalIgnoreCase) &&
-                !p.Name.Contains("Flat White", StringComparison.OrdinalIgnoreCase) &&
-                !p.Name.Contains("Mocha", StringComparison.OrdinalIgnoreCase) &&
-                !p.Name.Contains("Frappe", StringComparison.OrdinalIgnoreCase)
-            ).ToList();
-        }
-
-        // Vegan
-        if (norm.Contains("vegan") || norm.Contains("bitkisel"))
-        {
-            filtered = filtered.Where(p =>
-                p.Tags.Any(t => GeminiAiService.NormalizeText(t.Name).Equals("vegan")) &&
-                !p.Tags.Any(t =>
-                {
-                    var tNorm = GeminiAiService.NormalizeText(t.Name);
-                    return tNorm.Contains("sut urunu") || tNorm.Contains("yumurta");
-                }) &&
-                !p.Name.Contains("Tavuk", StringComparison.OrdinalIgnoreCase) &&
-                !p.Name.Contains("Hindi", StringComparison.OrdinalIgnoreCase)
-            ).ToList();
-        }
-
-        // Vejetaryen
-        if (norm.Contains("vejetaryen") || norm.Contains("vejeteryan") || norm.Contains("etsiz") || norm.Contains("tavuksuz"))
-        {
-            filtered = filtered.Where(p =>
-                (p.Tags.Any(t =>
-                {
-                    var tNorm = GeminiAiService.NormalizeText(t.Name);
-                    return tNorm.Equals("vejetaryen") || tNorm.Equals("vegan");
-                })) &&
-                !p.Name.Contains("Tavuk", StringComparison.OrdinalIgnoreCase) &&
-                !p.Name.Contains("Hindi", StringComparison.OrdinalIgnoreCase) &&
-                !p.Name.Contains("Et", StringComparison.OrdinalIgnoreCase)
-            ).ToList();
-        }
-
-        // Kafeinsiz
-        if (norm.Contains("kafeinsiz") || norm.Contains("decaf"))
-        {
-            filtered = filtered.Where(p =>
-                p.Tags.Any(t => GeminiAiService.NormalizeText(t.Name).Equals("kafeinsiz")) ||
-                p.Name.Contains("Kafeinsiz", StringComparison.OrdinalIgnoreCase) ||
-                (p.Description != null && GeminiAiService.NormalizeText(p.Description).Contains("kafeinsiz"))
-            ).ToList();
-        }
-
-        // 10. FİYAT FİLTRELEMESİ (Price Limits)
-        if (maxPrice.HasValue)
-        {
-            filtered = filtered.Where(p => p.Price <= maxPrice.Value).ToList();
-            _logger.LogInformation(">>> [PRICE FILTER] MaxPrice ({MaxPrice} TL) uygulandı, kalan ürün: {Count}", maxPrice.Value, filtered.Count);
-        }
-
-        if (minPrice.HasValue)
-        {
-            filtered = filtered.Where(p => p.Price >= minPrice.Value).ToList();
-            _logger.LogInformation(">>> [PRICE FILTER] MinPrice ({MinPrice} TL) uygulandı, kalan ürün: {Count}", minPrice.Value, filtered.Count);
-        }
-
-        // 11. FİYAT SIRALAMASI (Price Sorting)
-        if (pricePreference == "cheap")
-        {
-            filtered = filtered.OrderBy(p => p.Price).ToList();
-            _logger.LogInformation(">>> [PRICE SORT] 'cheap' tercihi gereği fiyata göre artan (artan fiyat) sıralandı.");
-        }
-        else if (pricePreference == "expensive")
-        {
-            filtered = filtered.OrderByDescending(p => p.Price).ToList();
-            _logger.LogInformation(">>> [PRICE SORT] 'expensive' tercihi gereği fiyata göre azalan (azalan fiyat) sıralandı.");
-        }
-
-        // 12. Nihai Mesajın Belirlenmesi (Barista Persona & Cliche Sanitization)
+        // 8. Deterministik Barista Yanıtı & Cliche Sanitization
         string finalMessage;
         if (filtered.Count == 0)
         {
@@ -428,7 +247,6 @@ public class MenuService : IMenuService
             }
             else
             {
-                // Deterministik Barista Yanıtı
                 if (pricePreference == "cheap")
                 {
                     finalMessage = "Sizin için menümüzdeki en uygun fiyatlı lezzetleri listeledim:";
@@ -437,13 +255,23 @@ public class MenuService : IMenuService
                 {
                     finalMessage = $"Sizin için {maxPrice.Value:0} TL altındaki seçeneklerimizi listeledim:";
                 }
-                else if (norm.Contains("kahvalti"))
+                else if (macroDomain == MacroDomain.BeverageCoffee)
+                {
+                    finalMessage = norm.Contains("soguk")
+                        ? "Sizin için ferahlatıcı soğuk kahve alternatiflerimizi listeledim:"
+                        : "Sizin için taze demlenmiş sıcak kahve alternatiflerimizi listeledim:";
+                }
+                else if (macroDomain == MacroDomain.FoodKitchen)
                 {
                     finalMessage = "Güne güzel bir başlangıç için kahvaltılık ve doyurucu alternatiflerimiz:";
                 }
-                else if (!string.IsNullOrWhiteSpace(canonicalCategory))
+                else if (macroDomain == MacroDomain.FoodDessert)
                 {
-                    finalMessage = $"Sizin için {canonicalCategory} alternatiflerimizi listeledim:";
+                    finalMessage = "Tatlı krizleriniz için özenle hazırlanan lezzetlerimiz:";
+                }
+                else if (macroDomain == MacroDomain.BeverageOther)
+                {
+                    finalMessage = "Sizin için serinletici soğuk içecek alternatiflerimizi listeledim:";
                 }
                 else
                 {
@@ -455,7 +283,7 @@ public class MenuService : IMenuService
         _logger.LogInformation(">>> [FINAL RESULT] Eşleşen nihai ürün sayısı: {MatchedCount} | Mesaj: '{Message}'", filtered.Count, finalMessage);
         _logger.LogInformation("=================================================");
 
-        // 13. MenuSearchResultDto döndür
+        // 9. Dinamik ve Bağlamsal Etiket Sıralaması ile ProductDto Projeksiyonu
         return new MenuSearchResultDto
         {
             Message = finalMessage,
@@ -468,70 +296,20 @@ public class MenuService : IMenuService
                 Description = p.Description,
                 Price = p.Price,
                 IsAvailable = p.IsAvailable,
-                Tags = p.Tags.Select(t => t.Name).ToList()
+                Tags = p.Tags
+                    .Select(t => t.Name)
+                    .OrderByDescending(t => _taxonomyRegistry.CalculateTagScore(t, norm, p.Category?.Name))
+                    .ToList()
             }).ToList()
         };
     }
 
     public static string? MapToCanonicalCategory(string? intentCategory, string normalizedQuery)
     {
-        var normCat = GeminiAiService.NormalizeText(intentCategory ?? string.Empty);
-        var norm = normalizedQuery;
-
-        // 1. Atıştırmalık & Mutfak
-        if (normCat.Contains("atistirmalik") || normCat.Contains("mutfak") || normCat.Contains("kahvalti") ||
-            norm.Contains("kahvalti") || norm.Contains("tost") || norm.Contains("sandvic") ||
-            norm.Contains("atistir") || norm.Contains("patates") || norm.Contains("wrap") ||
-            norm.Contains("bowl") || norm.Contains("ana yemek") || norm.Contains("yemek") ||
-            norm.Contains("yiyecek") || norm.Contains("doyurucu") || norm.Contains("snack") || norm.Contains("tuzlu"))
-        {
-            return "Atıştırmalık & Mutfak";
-        }
-
-        // 2. Soğuk İçecekler (Meşrubat, Gazlı İçecek, Kola, Gazoz vb. - ASLA kahve değildir)
-        if (normCat.Contains("soguk icecek") || normCat.Contains("mesrubat") ||
-            norm.Contains("mesrubat") || norm.Contains("gazli") ||
-            norm.Contains("kola") || norm.Contains("cola") ||
-            norm.Contains("fanta") || norm.Contains("sprite") || norm.Contains("gazoz") ||
-            norm.Contains("maden suyu") || norm.Contains("soda") ||
-            norm.Contains("limonata") || norm.Contains("soguk cay") || norm.Contains("ice tea") ||
-            norm.Contains("portakal suyu") || (norm.Contains("icecek") && !norm.Contains("sicak") && !norm.Contains("kahve")))
-        {
-            return "Soğuk İçecekler";
-        }
-
-        // 3. Tatlılar & Pastacılık
-        if (normCat.Contains("tatli") || normCat.Contains("pasta") ||
-            norm.Contains("tatli") || norm.Contains("pasta") || norm.Contains("kek") ||
-            norm.Contains("cheesecake") || norm.Contains("brownie") || norm.Contains("tiramisu") ||
-            norm.Contains("puding") || norm.Contains("cikolata") || norm.Contains("kurabiye"))
-        {
-            return "Tatlılar & Pastacılık";
-        }
-
-        // 4. Soğuk Kahveler
-        if (normCat.Contains("soguk kahve") ||
-            norm.Contains("soguk kahve") ||
-            norm.Contains("iced latte") || norm.Contains("cold brew") ||
-            norm.Contains("frappe") || norm.Contains("iced americano") ||
-            norm.Contains("buzlu kahve") || norm.Contains("iced mocha") ||
-            (norm.Contains("kahve") && (norm.Contains("soguk") || norm.Contains("iced") || norm.Contains("buzlu"))))
-        {
-            return "Soğuk Kahveler";
-        }
-
-        // 5. Sıcak Kahveler
-        if (normCat.Contains("sicak kahve") || normCat.Contains("kahve") ||
-            norm.Contains("sicak kahve") ||
-            norm.Contains("kahve") || norm.Contains("filtre") ||
-            norm.Contains("espresso") || norm.Contains("latte") ||
-            norm.Contains("cappuccino") || norm.Contains("americano") ||
-            norm.Contains("turk kahvesi") || norm.Contains("flat white") ||
-            norm.Contains("mocha"))
-        {
-            return "Sıcak Kahveler";
-        }
-
-        return null;
+        var registry = new TaxonomyRegistry();
+        var domain = registry.ResolveMacroDomain(normalizedQuery, intentCategory);
+        if (!domain.HasValue) return null;
+        var categories = registry.GetCategoriesForDomain(domain.Value);
+        return categories.FirstOrDefault();
     }
 }

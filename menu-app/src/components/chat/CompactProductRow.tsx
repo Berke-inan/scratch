@@ -4,13 +4,19 @@ import React from "react"
 import { ProductDto } from "@/types/menu"
 import { ChevronRight } from "lucide-react"
 import { getTagBadgeStyle } from "@/components/menu/ProductCard"
+import { getSmartProductTags } from "@/utils/tagUtils"
 
 interface CompactProductRowProps {
   product: ProductDto
+  userQuery?: string
   onClick: () => void
 }
 
-export function CompactProductRow({ product, onClick }: CompactProductRowProps) {
+export function CompactProductRow({
+  product,
+  userQuery = "",
+  onClick,
+}: CompactProductRowProps) {
   const formattedPrice =
     typeof product.price === "number"
       ? new Intl.NumberFormat("tr-TR", {
@@ -19,8 +25,12 @@ export function CompactProductRow({ product, onClick }: CompactProductRowProps) 
         }).format(product.price)
       : product.price
 
-  // Öncelikli ilk etiket (Diyet/Alerjen veya Sıcaklık)
-  const primaryTag = product.tags && product.tags.length > 0 ? product.tags[0] : null
+  // Akıllı Etiket Önceliklendirme (Query Relevance > Diyet > Varsayılan)
+  const displayedTags = getSmartProductTags(
+    product.tags,
+    userQuery,
+    product.categoryName
+  )
 
   return (
     <div
@@ -33,21 +43,27 @@ export function CompactProductRow({ product, onClick }: CompactProductRowProps) 
           onClick()
         }
       }}
-      className="flex items-center justify-between px-3 h-10 sm:h-11 w-full rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800 hover:border-amber-500/50 hover:bg-amber-50/20 dark:hover:bg-amber-950/20 transition-all cursor-pointer group shadow-2xs select-none"
+      className="flex items-center justify-between px-3 h-10 sm:h-11 w-full rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800 hover:border-amber-500/50 hover:bg-amber-50/30 dark:hover:bg-amber-950/20 transition-all cursor-pointer group shadow-2xs select-none"
     >
-      {/* Sol: Ürün Adı + Varsa minik rozet */}
-      <div className="flex items-center gap-2 min-w-0 pr-2">
+      {/* Sol: Ürün Adı + Varsa minik rozetler */}
+      <div className="flex items-center gap-1.5 min-w-0 pr-2">
         <span className="text-xs sm:text-[13px] font-semibold text-neutral-900 dark:text-neutral-100 truncate group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
           {product.name}
         </span>
-        {primaryTag && (
-          <span
-            className={`shrink-0 text-[10px] px-1.5 py-0.2 rounded-md font-medium tracking-tight ${getTagBadgeStyle(
-              primaryTag
-            )}`}
-          >
-            {primaryTag}
-          </span>
+
+        {displayedTags.length > 0 && (
+          <div className="flex items-center gap-1 shrink-0">
+            {displayedTags.map((tag) => (
+              <span
+                key={tag}
+                className={`text-[10px] px-1.5 py-0.2 rounded-md font-medium tracking-tight ${getTagBadgeStyle(
+                  tag
+                )}`}
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
         )}
       </div>
 

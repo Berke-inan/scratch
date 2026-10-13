@@ -18,11 +18,25 @@ export function ChatWindow() {
     const lastMessage = messages[messages.length - 1]
 
     if (lastMessage?.sender === "assistant") {
-      // AI yanıtı tamamlandığında son gelen AI mesajının tepe noktasına yumuşakça odaklan
-      lastAiMessageRef.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      })
+      // AI yanıtı tamamlandığında "EŞLEŞEN MENÜ LEZZETLERİ" başlığına yumuşakça odaklan
+      const timer = setTimeout(() => {
+        const headerEl = lastAiMessageRef.current?.querySelector<HTMLElement>(
+          '[data-scroll-target="matched-products-header"]'
+        )
+        if (headerEl) {
+          headerEl.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          })
+        } else {
+          lastAiMessageRef.current?.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          })
+        }
+      }, 60)
+
+      return () => clearTimeout(timer)
     } else {
       // Kullanıcı mesaj gönderdiğinde veya AI yazıyor göstergesi aktifken en alta in
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -143,13 +157,24 @@ export function ChatWindow() {
         {messages.map((msg, index) => {
           const isLatestAiMessage = index === lastAiMessageIndex
 
+          // Assistant mesajı için ilişkili son kullanıcı sorgusunu bul
+          const previousUserMessage = messages
+            .slice(0, index)
+            .reverse()
+            .find((m) => m.sender === "user")
+          const userQuery = previousUserMessage?.text || ""
+
           return (
             <div
               key={msg.id}
               ref={isLatestAiMessage ? lastAiMessageRef : null}
               className={isLatestAiMessage ? "scroll-mt-4" : ""}
             >
-              <ChatMessageItem message={msg} theme={theme} />
+              <ChatMessageItem
+                message={msg}
+                theme={theme}
+                userQuery={userQuery}
+              />
             </div>
           )
         })}

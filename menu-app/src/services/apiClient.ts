@@ -5,6 +5,7 @@ import {
   MenuSearchResultDto,
   ProductDto,
 } from "@/types/menu"
+import { calculateTagScore } from "@/utils/tagUtils"
 
 function getApiBaseUrl(): string {
   const raw = process.env.NEXT_PUBLIC_API_URL?.trim()
@@ -231,24 +232,77 @@ export class ApiClient {
         }
       }
 
-      // Smart client-side fallback matching
+      // Smart client-side fallback matching with Hard Category Boundary
       let matched = [...FALLBACK_PRODUCTS]
 
-      if (lower.includes("kahvaltı") || lower.includes("kahvalti") || lower.includes("tost") || lower.includes("atıştır")) {
-        matched = matched.filter((p) => p.categoryName.includes("Atıştırmalık"))
-      } else if (lower.includes("kola") || lower.includes("gazoz") || lower.includes("meşrubat") || lower.includes("içecek")) {
-        matched = matched.filter((p) => p.categoryName.includes("Soğuk İçecek"))
-      } else if (lower.includes("tatlı") || lower.includes("pasta") || lower.includes("cheesecake")) {
-        matched = matched.filter((p) => p.categoryName.includes("Tatlı"))
-      } else if (lower.includes("kahve") || lower.includes("latte") || lower.includes("espresso")) {
-        matched = matched.filter((p) => p.categoryName.includes("Kahve"))
-      }
+      const isCoffeeQuery =
+        lower.includes("kahve") ||
+        lower.includes("latte") ||
+        lower.includes("espresso") ||
+        lower.includes("filtre") ||
+        lower.includes("cappuccino") ||
+        lower.includes("americano") ||
+        lower.includes("cortado") ||
+        lower.includes("mocha") ||
+        lower.includes("flat white") ||
+        lower.includes("cold brew") ||
+        lower.includes("frappe")
 
-      // Temperature filter
-      if (lower.includes("sıcak")) {
-        matched = matched.filter((p) => p.tags.includes("Sıcak") || p.categoryName.includes("Sıcak"))
-      } else if (lower.includes("soğuk")) {
-        matched = matched.filter((p) => p.tags.includes("Soğuk") || p.categoryName.includes("Soğuk"))
+      const isFoodQuery =
+        lower.includes("kahvaltı") ||
+        lower.includes("kahvalti") ||
+        lower.includes("tost") ||
+        lower.includes("sandviç") ||
+        lower.includes("sandvic") ||
+        lower.includes("wrap") ||
+        lower.includes("bowl") ||
+        lower.includes("atıştır") ||
+        lower.includes("patates") ||
+        lower.includes("yemek")
+
+      const isDessertQuery =
+        lower.includes("tatlı") ||
+        lower.includes("tatli") ||
+        lower.includes("pasta") ||
+        lower.includes("cheesecake") ||
+        lower.includes("brownie") ||
+        lower.includes("tiramisu") ||
+        lower.includes("kurabiye")
+
+      const isColdDrinkQuery =
+        lower.includes("kola") ||
+        lower.includes("cola") ||
+        lower.includes("gazoz") ||
+        lower.includes("meşrubat") ||
+        lower.includes("mesrubat") ||
+        lower.includes("soda") ||
+        lower.includes("limonata") ||
+        lower.includes("soğuk çay")
+
+      const wantsHot = lower.includes("sıcak") || lower.includes("sicak")
+      const wantsCold = lower.includes("soğuk") || lower.includes("soguk") || lower.includes("buzlu") || lower.includes("iced")
+
+      if (isCoffeeQuery && !isFoodQuery) {
+        matched = matched.filter(
+          (p) => p.categoryName === "Sıcak Kahveler" || p.categoryName === "Soğuk Kahveler"
+        )
+        if (wantsHot && !wantsCold) {
+          matched = matched.filter((p) => p.categoryName === "Sıcak Kahveler")
+        } else if (wantsCold && !wantsHot) {
+          matched = matched.filter((p) => p.categoryName === "Soğuk Kahveler")
+        }
+      } else if (isFoodQuery && !isCoffeeQuery) {
+        matched = matched.filter((p) => p.categoryName.includes("Atıştırmalık"))
+      } else if (isDessertQuery) {
+        matched = matched.filter((p) => p.categoryName.includes("Tatlı"))
+      } else if (isColdDrinkQuery) {
+        matched = matched.filter((p) => p.categoryName.includes("Soğuk İçecek"))
+      } else {
+        if (wantsHot && !wantsCold) {
+          matched = matched.filter((p) => p.tags.includes("Sıcak") || p.categoryName.includes("Sıcak"))
+        } else if (wantsCold && !wantsHot) {
+          matched = matched.filter((p) => p.tags.includes("Soğuk") || p.categoryName.includes("Soğuk"))
+        }
       }
 
       // Price limit (e.g. 150 TL altı)
@@ -359,7 +413,14 @@ export class ApiClient {
 
       return {
         message: msg,
-        products: matched,
+        products: matched.map((p) => ({
+          ...p,
+          tags: [...p.tags].sort(
+            (a, b) =>
+              calculateTagScore(b, trimmedQuery, p.categoryName) -
+              calculateTagScore(a, trimmedQuery, p.categoryName)
+          ),
+        })),
       }
     }
   }

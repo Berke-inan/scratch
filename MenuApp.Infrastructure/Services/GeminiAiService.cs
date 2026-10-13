@@ -37,6 +37,9 @@ public class GeminiAiService : IAiService
         "3. 'Soğuk İçecekler': Meşrubat, gazlı içecek, kola, fanta, sprite, gazoz, maden suyu, soda, doğal su, ev yapımı limonata, soğuk çay, portakal suyu. (Kola, gazoz, soda ve meşrubatlar ASLA kahve değildir!).\n" +
         "4. 'Tatlılar & Pastacılık': Tatlı, pasta, kek, cheesecake, brownie, tiramisu, kruvasan (tatlı), kurabiye, çikolatalı lezzetler.\n" +
         "5. 'Atıştırmalık & Mutfak': Kahvaltı, kahvaltılık, tost, sandviç, kruvasan sandviç, wrap, bowl, patates sepeti, atıştırmalık, ana yemek, doyurucu öğünler, yiyecek, tuzlu.\n\n" +
+        "Kategori ve Kapsam İzolasyonu (Hard Category Boundary):\n" +
+        "- Eğer kullanıcı 'kahve', 'espresso', 'latte', 'filtre' vb. kahve ifadeleri sorguluyorsa veya niyet kahve ise: 'category' YALNIZCA 'Sıcak Kahveler' veya 'Soğuk Kahveler' olmalıdır. 'Atıştırmalık & Mutfak' ve 'Tatlılar & Pastacılık' kategorileri KESİNLİKLE DIŞLANMALIDIR.\n" +
+        "- Bir ürün 'Sıcak' veya 'Şekersiz' etiketine sahip diye asla mutfak ürünü olarak kahve sorgusuna dahil edilemez.\n\n" +
         "Fiyat ve Bütçe Kuralları:\n" +
         "- 'price_preference': Kullanıcı 'ucuz', 'en ucuz', 'uygun', 'en uygun', 'hesaplı', 'ekonomik', 'bütçe dostu', 'fiyatı düşük' derse 'cheap'. 'en pahalı', 'lüks', 'premium' derse 'expensive'. Aksi halde 'none'.\n" +
         "- 'max_price': '150 TL altı', 'en fazla 200 lira', '100 liraya kadar' gibi üst sınır varsa sayısal değer (örn: 150), yoksa null.\n" +
@@ -368,60 +371,35 @@ public class GeminiAiService : IAiService
             }
         }
 
-        // 4. Kategori Eşlemesi (5 Kanonik Kategori)
+        // 4. Kategori Eşlemesi (TaxonomyRegistry & MacroDomain)
         string? category = null;
         var searchKeywords = new List<string>();
         var excludeTags = new List<string>();
 
-        // Atıştırmalık & Mutfak
-        if (norm.Contains("kahvalti") || norm.Contains("tost") || norm.Contains("sandvic") ||
-            norm.Contains("atistir") || norm.Contains("patates") || norm.Contains("wrap") ||
-            norm.Contains("bowl") || norm.Contains("yemek") || norm.Contains("ana yemek") ||
-            norm.Contains("yiyecek") || norm.Contains("doyurucu") || norm.Contains("tuzlu") || norm.Contains("snack"))
+        var registry = new MenuApp.Infrastructure.Search.TaxonomyRegistry();
+        var domain = registry.ResolveMacroDomain(norm);
+        if (domain.HasValue)
         {
-            category = "Atıştırmalık & Mutfak";
-            if (norm.Contains("kahvalti")) searchKeywords.Add("kahvaltı");
-            if (norm.Contains("tost")) searchKeywords.Add("tost");
-            if (norm.Contains("sandvic")) searchKeywords.Add("sandviç");
-            if (norm.Contains("patates")) searchKeywords.Add("patates");
-            if (norm.Contains("wrap")) searchKeywords.Add("wrap");
-            if (norm.Contains("bowl")) searchKeywords.Add("bowl");
-        }
-        // Soğuk İçecekler (Meşrubat, Kola vb. - Asla kahve değildir!)
-        else if (norm.Contains("mesrubat") || norm.Contains("gazli") ||
-                 norm.Contains("kola") || norm.Contains("cola") || norm.Contains("fanta") || norm.Contains("sprite") ||
-                 norm.Contains("gazoz") || norm.Contains("soda") || norm.Contains("maden suyu") ||
-                 norm.Contains("limonata") || norm.Contains("soguk cay") || norm.Contains("ice tea") ||
-                 norm.Contains("portakal suyu") || (norm.Contains("icecek") && !norm.Contains("sicak")))
-        {
-            category = "Soğuk İçecekler";
-            if (norm.Contains("kola") || norm.Contains("cola")) searchKeywords.Add("kola");
-            if (norm.Contains("gazoz") || norm.Contains("sprite")) searchKeywords.Add("gazoz");
-            if (norm.Contains("soda") || norm.Contains("maden")) searchKeywords.Add("maden suyu");
-            if (norm.Contains("limonata")) searchKeywords.Add("limonata");
-        }
-        // Tatlılar & Pastacılık
-        else if (norm.Contains("tatli") || norm.Contains("pasta") || norm.Contains("kek") ||
-                 norm.Contains("cheesecake") || norm.Contains("brownie") || norm.Contains("tiramisu") ||
-                 norm.Contains("puding") || norm.Contains("cikolata") || norm.Contains("kurabiye"))
-        {
-            category = "Tatlılar & Pastacılık";
-            searchKeywords.Add("tatlı");
-        }
-        // Soğuk Kahveler
-        else if (norm.Contains("soguk kahve") || norm.Contains("iced latte") ||
-                 norm.Contains("cold brew") || norm.Contains("frappe") || norm.Contains("iced") || norm.Contains("buzlu kahve"))
-        {
-            category = "Soğuk Kahveler";
-            searchKeywords.Add("kahve");
-        }
-        // Sıcak Kahveler
-        else if (norm.Contains("kahve") || norm.Contains("espresso") || norm.Contains("latte") ||
-                 norm.Contains("filtre") || norm.Contains("cappuccino") || norm.Contains("americano") ||
-                 norm.Contains("turk kahvesi") || norm.Contains("sicak kahve"))
-        {
-            category = "Sıcak Kahveler";
-            searchKeywords.Add("kahve");
+            switch (domain.Value)
+            {
+                case MenuApp.Core.Enums.MacroDomain.BeverageCoffee:
+                    bool wantsCold = norm.Contains("soguk") || norm.Contains("cold") || norm.Contains("iced") || norm.Contains("buzlu") || norm.Contains("cold brew") || norm.Contains("frappe");
+                    category = wantsCold ? "Soğuk Kahveler" : "Sıcak Kahveler";
+                    searchKeywords.Add("kahve");
+                    break;
+
+                case MenuApp.Core.Enums.MacroDomain.BeverageOther:
+                    category = "Soğuk İçecekler";
+                    break;
+
+                case MenuApp.Core.Enums.MacroDomain.FoodKitchen:
+                    category = "Atıştırmalık & Mutfak";
+                    break;
+
+                case MenuApp.Core.Enums.MacroDomain.FoodDessert:
+                    category = "Tatlılar & Pastacılık";
+                    break;
+            }
         }
 
         // Dışlanan etiketler

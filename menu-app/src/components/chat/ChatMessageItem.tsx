@@ -18,9 +18,10 @@ import {
 interface ChatMessageItemProps {
   message: ChatMessage
   theme: ChatTheme
+  userQuery?: string
 }
 
-export function ChatMessageItem({ message, theme }: ChatMessageItemProps) {
+export function ChatMessageItem({ message, theme, userQuery = "" }: ChatMessageItemProps) {
   const isUser = message.sender === "user"
   const [isCopied, setIsCopied] = useState(false)
   const [isSheetOpen, setIsSheetOpen] = useState(false)
@@ -32,28 +33,33 @@ export function ChatMessageItem({ message, theme }: ChatMessageItemProps) {
     setTimeout(() => setIsCopied(false), 2000)
   }
 
-  // Micro-List Rows & Bottom Sheet Renderer
+  // Micro-List Rows & Bottom Sheet Renderer (Akıcı sıralama + Bottom Sheet)
   const renderProductMicroList = () => {
     if (!message.products || message.products.length === 0) return null
 
-    const displayProducts = message.products.slice(0, 3)
-    const hasMore = message.products.length > 3
-
     return (
-      <div className="w-full mt-2.5 space-y-1.5">
-        <div className="text-[11px] font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider px-1 flex items-center justify-between">
-          <span>Önerilen Lezzetler ({message.products.length}):</span>
+      <div className="w-full mt-2.5 space-y-2">
+        {/* Eşleşen Menü Lezzetleri Başlığı (Akıllı Scroll Hedefi) */}
+        <div
+          data-scroll-target="matched-products-header"
+          className="text-[11px] font-bold text-neutral-600 dark:text-neutral-300 uppercase tracking-wider px-1 flex items-center justify-between scroll-mt-14"
+        >
+          <div className="flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+            <span>EŞLEŞEN MENÜ LEZZETLERİ ({message.products.length})</span>
+          </div>
           <span className="text-[10px] text-amber-600 dark:text-amber-400 font-normal lowercase tracking-normal">
             Detay için tıkla
           </span>
         </div>
 
-        {/* Kompakt Satırlar (Her biri 40-44px) */}
+        {/* Akıcı Kompakt Satırlar (Tüm Eşleşen Ürünler) */}
         <div className="space-y-1.5">
-          {displayProducts.map((product) => (
+          {message.products.map((product) => (
             <CompactProductRow
               key={product.id}
               product={product}
+              userQuery={userQuery}
               onClick={() => {
                 setSelectedProductId(product.id)
                 setIsSheetOpen(true)
@@ -62,19 +68,18 @@ export function ChatMessageItem({ message, theme }: ChatMessageItemProps) {
           ))}
         </div>
 
-        {/* 3'ten Fazla Ürün Varsa 'Tümünü İncele' Butonu */}
-        {hasMore && (
-          <button
-            onClick={() => {
-              setSelectedProductId(null)
-              setIsSheetOpen(true)
-            }}
-            className="w-full h-10 mt-1 flex items-center justify-center gap-1.5 text-xs font-semibold text-amber-700 dark:text-amber-300 bg-amber-50/90 dark:bg-amber-950/40 hover:bg-amber-100 dark:hover:bg-amber-900/40 border border-amber-200/80 dark:border-amber-800/80 rounded-xl transition-all cursor-pointer shadow-2xs group"
-          >
-            <span>🍽️ Tüm {message.products.length} Lezzeti İncele</span>
-            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-          </button>
-        )}
+        {/* Listenin En Altı: Şık Aksiyon Butonu */}
+        <button
+          onClick={() => {
+            setSelectedProductId(null)
+            setIsSheetOpen(true)
+          }}
+          className="w-full h-10 mt-1 flex items-center justify-center gap-2 text-xs font-semibold text-amber-700 dark:text-amber-300 bg-amber-50/90 dark:bg-amber-950/40 hover:bg-amber-100 dark:hover:bg-amber-900/50 border border-amber-200/90 dark:border-amber-800/80 rounded-xl transition-all cursor-pointer shadow-2xs group"
+        >
+          <span className="text-sm">📋</span>
+          <span>Tüm Menüde İncele / Detayları Aç</span>
+          <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+        </button>
 
         {/* Detay Bottom Sheet / Alt Çekmece */}
         {isSheetOpen && (
