@@ -29,6 +29,32 @@ public class MenuService : IMenuService
         [property: JsonPropertyName("min_price")] decimal? MinPrice
     );
 
+    private static int _curatedIndex = 0;
+
+    private static readonly IReadOnlyList<(string Message, string[] ProductNames)> CuratedRecommendations = new List<(string, string[])>
+    {
+        (
+            "Ben bir menü asistanıyım; ancak gününüze eşlik edecek harika bir lezzet ikilisi önerebilirim: 24 saat soğuk damıtılmış ferahlatıcı Cold Brew Reserve ve fırından taze Çikolatalı Bademli Kruvasanımız!",
+            new[] { "Cold Brew Reserve", "Çikolatalı Bademli Kruvasan" }
+        ),
+        (
+            "Size kafe lezzetlerimizden keyifli bir mola önerisi: Taze demlenmiş tek köken Filtre Kahvemiz ve Callebaut Belçika çikolatalı San Sebastian Cheesecake'imiz tam bir klasik.",
+            new[] { "Filtre Kahve (Single Origin)", "San Sebastian Cheesecake (Belçika Çikolatalı)" }
+        ),
+        (
+            "Doyurucu ve enerji verici bir şeyler arıyorsanız şefin favorisi: Artizan ekşi mayalı Avokadolu Poşe Yumurtalı Tostumuz ve yanında kadifemsi Caffe Latte!",
+            new[] { "Avokadolu Poşe Yumurtalı Ekşi Maya Tost", "Caffe Latte" }
+        ),
+        (
+            "Ferahlatıcı ve hafif bir mola için favori eşleşmemiz: Buzlu serinletici Iced Latte ve rafine şekersiz Glutensiz Vegan Raw Berry Bar!",
+            new[] { "Iced Latte", "Glutensiz Vegan Raw Berry Bar" }
+        ),
+        (
+            "Tuzlu ve çıtır bir lezzet arzu ederseniz: Trüf yağlı çıtır Patates Sepetimiz ve yanında taze nane yapraklarıyla hazırlanan Ev Yapımı Naneli Limonatamız!",
+            new[] { "Çıtır Patates Sepeti (Truffle & Parmesan)", "Ev Yapımı Naneli Limonata" }
+        )
+    };
+
     public MenuService(
         IAiService aiService,
         ApplicationDbContext dbContext,
@@ -95,26 +121,85 @@ public class MenuService : IMenuService
         var intent = intentPayload?.Intent?.Trim().ToLowerInvariant() ?? "menu_search";
         var rawAiMessage = intentPayload?.AiMessage?.Trim() ?? string.Empty;
 
-        // 2. Kapsam Dışı (out_of_scope) kontrolü
-        if (intent == "out_of_scope")
+        // 2. Kapsam Dışı (out_of_scope) / Alakasız Sorgu kontrolü
+        bool isGreeting = norm.Contains("merhaba") || norm.Contains("selam") ||
+                          norm.Contains("gunaydin") || norm.Contains("iyi gunler") || norm.Contains("iyi aksamlar") ||
+                          norm.Contains("nasilsin") || norm.Contains("naber") || norm.Contains("kolay gelsin") ||
+                          norm.Contains("tesekkur");
+
+        bool isOutOfScope = intent == "out_of_scope" || (intent == "chat" && !isGreeting);
+
+        if (isOutOfScope)
         {
-            _logger.LogInformation(">>> [OUT OF SCOPE] Sorgu menü kapsamı dışında değerlendirildi.");
+            _logger.LogInformation(">>> [OUT OF SCOPE] Alakasız sorgu tespit edildi: '{Query}'. Öne çıkan lezzet rotasyonu devreye giriyor.", userQuery);
+
+            int recIndex = Math.Abs(Interlocked.Increment(ref _curatedIndex) - 1) % CuratedRecommendations.Count;
+            var curated = CuratedRecommendations[recIndex];
+
+            var baseRecQuery = _dbContext.Products
+                .Include(p => p.Category)
+                .Include(p => p.Tags)
+                .Where(p => p.IsAvailable);
+
+            if (cafeId.HasValue && cafeId.Value != Guid.Empty)
+            {
+                baseRecQuery = baseRecQuery.Where(p => p.Category != null && p.Category.CafeId == cafeId.Value);
+            }
+
+            var availableRecProducts = await baseRecQuery.AsNoTracking().ToListAsync(cancellationToken);
+
+            var matchedProducts = new List<ProductDto>();
+            foreach (var targetName in curated.ProductNames)
+            {
+                var cleanTarget = GeminiAiService.NormalizeText(targetName);
+                var match = availableRecProducts.FirstOrDefault(p =>
+                    GeminiAiService.NormalizeText(p.Name).Contains(cleanTarget) ||
+                    cleanTarget.Contains(GeminiAiService.NormalizeText(p.Name)));
+
+                if (match != null && !matchedProducts.Any(mp => mp.Id == match.Id))
+                {
+                    matchedProducts.Add(new ProductDto
+                    {
+                        Id = match.Id,
+                        CategoryId = match.CategoryId,
+                        CategoryName = match.Category?.Name ?? string.Empty,
+                        Name = match.Name,
+                        Description = match.Description,
+                        Price = match.Price,
+                        IsAvailable = match.IsAvailable,
+                        Tags = match.Tags.Select(t => t.Name).ToList()
+                    });
+                }
+            }
+
+            if (matchedProducts.Count == 0 && availableRecProducts.Count > 0)
+            {
+                matchedProducts = availableRecProducts.Take(2).Select(p => new ProductDto
+                {
+                    Id = p.Id,
+                    CategoryId = p.CategoryId,
+                    CategoryName = p.Category?.Name ?? string.Empty,
+                    Name = p.Name,
+                    Description = p.Description,
+                    Price = p.Price,
+                    IsAvailable = p.IsAvailable,
+                    Tags = p.Tags.Select(t => t.Name).ToList()
+                }).ToList();
+            }
+
+            _logger.LogInformation(">>> [OUT OF SCOPE] Seçilen öneri indeksi: {Index}, Ürün sayısı: {Count}, Mesaj: '{Message}'",
+                recIndex, matchedProducts.Count, curated.Message);
             _logger.LogInformation("=================================================");
+
             return new MenuSearchResultDto
             {
-                Message = !string.IsNullOrWhiteSpace(rawAiMessage)
-                    ? GeminiAiService.SanitizeBaristaTone(rawAiMessage, "Ben menü asistanıyım. Size lezzetli yiyecek, içecek ve kahvelerimiz hakkında yardımcı olabilirim.")
-                    : "Ben menü asistanıyım. Size lezzetli yiyecek, içecek ve kahvelerimiz hakkında yardımcı olabilirim.",
-                Products = new List<ProductDto>()
+                Message = curated.Message,
+                Products = matchedProducts
             };
         }
 
         // 3. Genel Sohbet / Selamlaşma (chat) kontrolü
-        bool isStrictGreeting = norm == "merhaba" || norm == "selam" || norm == "selamlar" ||
-                                norm == "gunaydin" || norm == "iyi gunler" || norm == "iyi aksamlar" ||
-                                norm == "nasilsin" || norm == "naber";
-
-        if (intent == "chat" && isStrictGreeting)
+        if (intent == "chat" && isGreeting)
         {
             _logger.LogInformation(">>> [CHAT INTENT] Sohbet veya selamlaşma yanıtı üretildi: '{Message}'", rawAiMessage);
             _logger.LogInformation("=================================================");
@@ -258,6 +343,52 @@ public class MenuService : IMenuService
         string finalMessage;
         if (filtered.Count == 0)
         {
+            if (!macroDomain.HasValue && pricePreference == "none" && !maxPrice.HasValue && !minPrice.HasValue && (intentPayload?.ExcludeTags?.Count ?? 0) == 0)
+            {
+                int recIndex = Math.Abs(Interlocked.Increment(ref _curatedIndex) - 1) % CuratedRecommendations.Count;
+                var curated = CuratedRecommendations[recIndex];
+
+                var fallbackProducts = new List<ProductDto>();
+                foreach (var targetName in curated.ProductNames)
+                {
+                    var cleanTarget = GeminiAiService.NormalizeText(targetName);
+                    var match = allAvailable.FirstOrDefault(p =>
+                        GeminiAiService.NormalizeText(p.Name).Contains(cleanTarget) ||
+                        cleanTarget.Contains(GeminiAiService.NormalizeText(p.Name)));
+
+                    if (match != null && !fallbackProducts.Any(mp => mp.Id == match.Id))
+                    {
+                        fallbackProducts.Add(new ProductDto
+                        {
+                            Id = match.Id,
+                            CategoryId = match.CategoryId,
+                            CategoryName = match.Category?.Name ?? string.Empty,
+                            Name = match.Name,
+                            Description = match.Description,
+                            Price = match.Price,
+                            IsAvailable = match.IsAvailable,
+                            Tags = match.Tags.Select(t => t.Name).ToList()
+                        });
+                    }
+                }
+
+                return new MenuSearchResultDto
+                {
+                    Message = curated.Message,
+                    Products = fallbackProducts.Count > 0 ? fallbackProducts : allAvailable.Take(2).Select(p => new ProductDto
+                    {
+                        Id = p.Id,
+                        CategoryId = p.CategoryId,
+                        CategoryName = p.Category?.Name ?? string.Empty,
+                        Name = p.Name,
+                        Description = p.Description,
+                        Price = p.Price,
+                        IsAvailable = p.IsAvailable,
+                        Tags = p.Tags.Select(t => t.Name).ToList()
+                    }).ToList()
+                };
+            }
+
             finalMessage = "Belirttiğiniz kriterlere veya fiyat aralığına uygun ürün bulunamadı. Farklı bir seçenek denemek ister misiniz?";
         }
         else if (isBrowseAllGeneral)

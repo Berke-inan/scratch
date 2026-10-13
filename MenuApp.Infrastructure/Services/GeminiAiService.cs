@@ -512,7 +512,18 @@ public class GeminiAiService : IAiService
         }
         else
         {
-            aiMessage = "Sizin için seçeneklerimizi listeledim:";
+            // Menüyle hiçbir ilişkisi olmayan alakasız / kapsam dışı sorgu
+            return JsonSerializer.Serialize(new
+            {
+                intent = "out_of_scope",
+                ai_message = "Ben bir menü asistanıyım.",
+                category = (string?)null,
+                search_keywords = new List<string>(),
+                exclude_tags = new List<string>(),
+                price_preference = "none",
+                max_price = (decimal?)null,
+                min_price = (decimal?)null
+            });
         }
 
         return JsonSerializer.Serialize(new

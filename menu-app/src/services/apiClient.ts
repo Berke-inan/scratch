@@ -158,6 +158,27 @@ const FALLBACK_PRODUCTS: ProductDto[] = [
   },
 ]
 
+let clientCuratedIndex = 0
+
+const CLIENT_CURATED_RECOMMENDATIONS = [
+  {
+    message: "Ben bir menü asistanıyım; ancak gününüze eşlik edecek harika bir lezzet ikilisi önerebilirim: 24 saat soğuk damıtılmış ferahlatıcı Cold Brew Reserve ve Belçika çikolatalı San Sebastian Cheesecake'imiz!",
+    productNames: ["Cold Brew Reserve", "San Sebastian Cheesecake (Belçika Çikolatalı)"],
+  },
+  {
+    message: "Size kafe lezzetlerimizden keyifli bir mola önerisi: Taze demlenmiş tek köken Americano ve fırınlanmış San Sebastian Cheesecake'imiz tam bir klasik.",
+    productNames: ["Americano", "San Sebastian Cheesecake (Belçika Çikolatalı)"],
+  },
+  {
+    message: "Doyurucu ve enerji verici bir şeyler arıyorsanız şefin favorisi: Artizan ekşi mayalı Avokadolu Poşe Yumurtalı Tostumuz ve yanında kadifemsi Caffe Latte!",
+    productNames: ["Avokadolu Poşe Yumurtalı Ekşi Maya Tost", "Caffe Latte"],
+  },
+  {
+    message: "Ferahlatıcı ve hafif bir mola için favori ikilimiz: Buzlu serinletici Iced Latte ve aromatik lezzetlerimiz!",
+    productNames: ["Iced Latte", "Cold Brew Reserve"],
+  },
+]
+
 export class ApiClient {
   private static async request<T>(endpoint: string, options?: RequestInit): Promise<T> {
     const cleanEndpoint = endpoint.trim()
@@ -536,6 +557,51 @@ export class ApiClient {
       // Decaf filter
       if (lower.includes("kafeinsiz") || lower.includes("decaf")) {
         matched = matched.filter((p) => p.tags.includes("Kafeinsiz") || p.name.toLowerCase().includes("kafeinsiz"))
+      }
+
+      const hasSpecificFilter =
+        isCoffeeQuery ||
+        isFoodQuery ||
+        isDessertQuery ||
+        isColdDrinkQuery ||
+        wantsHot ||
+        wantsCold ||
+        isCheap ||
+        maxPrice != null ||
+        lower.includes("şeker") ||
+        lower.includes("seker") ||
+        wantsDairyFree ||
+        lower.includes("süt") ||
+        lower.includes("sut") ||
+        lower.includes("gluten") ||
+        lower.includes("glüten") ||
+        lower.includes("vejet") ||
+        lower.includes("vegan") ||
+        lower.includes("kafein")
+
+      if (!hasSpecificFilter) {
+        const curated = CLIENT_CURATED_RECOMMENDATIONS[clientCuratedIndex % CLIENT_CURATED_RECOMMENDATIONS.length]
+        clientCuratedIndex++
+
+        const curatedProducts = FALLBACK_PRODUCTS.filter((p) =>
+          curated.productNames.some(
+            (name) =>
+              p.name.toLowerCase().includes(name.toLowerCase()) ||
+              name.toLowerCase().includes(p.name.toLowerCase())
+          )
+        )
+
+        return {
+          message: curated.message,
+          products: (curatedProducts.length > 0 ? curatedProducts : FALLBACK_PRODUCTS.slice(0, 2)).map((p) => ({
+            ...p,
+            tags: [...p.tags].sort(
+              (a, b) =>
+                calculateTagScore(b, trimmedQuery, p.categoryName) -
+                calculateTagScore(a, trimmedQuery, p.categoryName)
+            ),
+          })),
+        }
       }
 
       let msg = "Sizin için menümüzden lezzetleri listeledim:"

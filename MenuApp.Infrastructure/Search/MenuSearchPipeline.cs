@@ -276,10 +276,26 @@ public class MenuSearchPipeline
             return new { Product = p, Score = score };
         }).ToList();
 
+        bool hasScoreMatches = scored.Any(x => x.Score > 0);
+        var filteredScored = scored;
+
+        if (hasScoreMatches)
+        {
+            // Puan almış ürünler varsa, puanı 0 olan ilgisiz ürünleri listeye dahil etme
+            filteredScored = scored.Where(x => x.Score > 0).ToList();
+        }
+        else if (!context.MacroDomain.HasValue && context.PricePreference == "none" 
+                 && !context.MaxPrice.HasValue && !context.MinPrice.HasValue 
+                 && (context.ExcludeTags == null || context.ExcludeTags.Count == 0))
+        {
+            // Arama yapıldı ancak menüde hiçbir ürün puan almadı ve herhangi bir makro alan / bütçe kriteri yok
+            return new List<Core.Entities.Product>();
+        }
+
         // Bütçe ve Fiyat Sıralaması Entegrasyonu
         if (context.PricePreference == "cheap")
         {
-            return scored
+            return filteredScored
                 .OrderBy(x => x.Product.Price)
                 .ThenByDescending(x => x.Score)
                 .Select(x => x.Product)
@@ -287,7 +303,7 @@ public class MenuSearchPipeline
         }
         else if (context.PricePreference == "expensive")
         {
-            return scored
+            return filteredScored
                 .OrderByDescending(x => x.Product.Price)
                 .ThenByDescending(x => x.Score)
                 .Select(x => x.Product)
@@ -295,7 +311,7 @@ public class MenuSearchPipeline
         }
         else
         {
-            return scored
+            return filteredScored
                 .OrderByDescending(x => x.Score)
                 .ThenBy(x => x.Product.Price)
                 .Select(x => x.Product)
