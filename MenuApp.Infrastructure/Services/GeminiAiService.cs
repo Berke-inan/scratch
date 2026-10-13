@@ -21,7 +21,7 @@ public class GeminiAiService : IAiService
         "- 'ai_message' alanına kullanıcıya öneri sunarken reklam yapmadan, tek cümleyle doğrudan konuya gir (Örn: 'Sizin için menümüzdeki en uygun fiyatlı lezzetleri listeledim:', 'Güne güzel bir başlangıç için kahvaltılık ve doyurucu alternatiflerimiz:', 'Sizin için taze demlenmiş sıcak kahvelerimizi listeledim:').\n\n" +
         "Görevin kullanıcının mesajını analiz ederek daima aşağıdaki JSON formatında tek bir nesne üretmektir:\n" +
         "{\n" +
-        "  \"intent\": \"chat\" | \"menu_search\" | \"out_of_scope\",\n" +
+        "  \"intent\": \"chat\" | \"menu_search\" | \"browse_all\" | \"out_of_scope\",\n" +
         "  \"ai_message\": \"string\",\n" +
         "  \"category\": \"Sıcak Kahveler\" | \"Soğuk Kahveler\" | \"Soğuk İçecekler\" | \"Tatlılar & Pastacılık\" | \"Atıştırmalık & Mutfak\" | null,\n" +
         "  \"search_keywords\": [\"string\"],\n" +
@@ -52,7 +52,8 @@ public class GeminiAiService : IAiService
         "Intent Kuralları:\n" +
         "- Genel selamlama / hal hatır ('merhaba', 'selam', 'nasılsın') -> intent: 'chat', category: null, search_keywords: [], exclude_tags: [], price_preference: 'none', max_price: null, min_price: null.\n" +
         "- Kod yazma, sistem hackleme veya kafe dışı konular -> intent: 'out_of_scope'.\n" +
-        "- Menü, lezzet veya bütçe sorgusu -> intent: 'menu_search'.\n" +
+        "- Menü katalog ve tümünü listeleme ('tüm menü', 'bütün menü', 'menüde ne var', 'her şeyi göster', 'bütün lezzetler', 'tüm kahveler', 'her kahvaltılık', 'bütün tatlılar') -> intent: 'browse_all'. Tüm menü için category: null, ai_message: 'Menümüzdeki tüm lezzetleri sizin için listeledim:'. Belirli bir kategori için category: ilgili kategori adı, ai_message: 'Tüm kahve alternatiflerimiz listelendi:' veya 'Tüm tatlı alternatiflerimiz listelendi:'.\n" +
+        "- Belirli bir lezzet, özellik veya bütçe sorgusu -> intent: 'menu_search'.\n" +
         "- YALNIZCA tek bir geçerli JSON döndür. Markdown (```json) veya fazladan açıklama yazma.";
 
     public GeminiAiService(
@@ -294,6 +295,78 @@ public class GeminiAiService : IAiService
                 intent = "out_of_scope",
                 ai_message = "Ben menü asistanıyım. Size lezzetli yiyecek, içecek ve kahvelerimiz hakkında yardımcı olabilirim.",
                 category = (string?)null,
+                search_keywords = new List<string>(),
+                exclude_tags = new List<string>(),
+                price_preference = "none",
+                max_price = (decimal?)null,
+                min_price = (decimal?)null
+            });
+        }
+
+        // 1.5. Katalog Modu / Tüm Menü / Bütün Kategori Sorguları (browse_all)
+        bool isBrowseAllGeneral =
+            norm.Contains("tum menu") || norm.Contains("bütün menu") || norm.Contains("butun menu") ||
+            norm.Contains("menude ne var") || norm.Contains("menuyu goster") || norm.Contains("her seyi goster") ||
+            norm.Contains("herseyi goster") || norm.Contains("butun lezzetler") || norm.Contains("tum lezzetler") ||
+            norm.Contains("tum urunler") || norm.Contains("butun urunler") || norm.Contains("hepsini goster") ||
+            norm == "menu" || norm == "menü";
+
+        bool isBrowseAllCategory =
+            norm.Contains("tum kahve") || norm.Contains("butun kahve") ||
+            norm.Contains("tum tatli") || norm.Contains("butun tatli") ||
+            norm.Contains("tum icecek") || norm.Contains("butun icecek") ||
+            norm.Contains("tum kahvalti") || norm.Contains("butun kahvalti") || norm.Contains("her kahvalti") ||
+            norm.Contains("tum mutfak") || norm.Contains("tum yemek") || norm.Contains("butun yemek") ||
+            norm.Contains("tum atistir") || norm.Contains("butun atistir");
+
+        if (isBrowseAllGeneral)
+        {
+            return JsonSerializer.Serialize(new
+            {
+                intent = "browse_all",
+                ai_message = "Menümüzdeki tüm lezzetleri sizin için listeledim:",
+                category = (string?)null,
+                search_keywords = new List<string>(),
+                exclude_tags = new List<string>(),
+                price_preference = "none",
+                max_price = (decimal?)null,
+                min_price = (decimal?)null
+            });
+        }
+
+        if (isBrowseAllCategory)
+        {
+            var reg = new MenuApp.Infrastructure.Search.TaxonomyRegistry();
+            var catDomain = reg.ResolveMacroDomain(norm);
+            string? catName = null;
+            string personaMsg = "Menümüzdeki seçenekleri sizin için listeledim:";
+
+            if (catDomain == MenuApp.Core.Enums.MacroDomain.BeverageCoffee)
+            {
+                catName = norm.Contains("soguk") ? "Soğuk Kahveler" : "Sıcak Kahveler";
+                personaMsg = "Tüm kahve alternatiflerimiz listelendi:";
+            }
+            else if (catDomain == MenuApp.Core.Enums.MacroDomain.FoodDessert)
+            {
+                catName = "Tatlılar & Pastacılık";
+                personaMsg = "Tüm tatlı alternatiflerimiz listelendi:";
+            }
+            else if (catDomain == MenuApp.Core.Enums.MacroDomain.FoodKitchen)
+            {
+                catName = "Atıştırmalık & Mutfak";
+                personaMsg = "Tüm kahvaltılık ve mutfak lezzetlerimiz listelendi:";
+            }
+            else if (catDomain == MenuApp.Core.Enums.MacroDomain.BeverageOther)
+            {
+                catName = "Soğuk İçecekler";
+                personaMsg = "Tüm soğuk içecek alternatiflerimiz listelendi:";
+            }
+
+            return JsonSerializer.Serialize(new
+            {
+                intent = "browse_all",
+                ai_message = personaMsg,
+                category = catName,
                 search_keywords = new List<string>(),
                 exclude_tags = new List<string>(),
                 price_preference = "none",

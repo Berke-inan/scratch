@@ -185,11 +185,35 @@ public class MenuService : IMenuService
             }
         }
 
-        // 5. Macro-Domain Tespiti (Katman 1: Kapsam ve Etki Alanı İzolasyonu)
-        var macroDomain = _taxonomyRegistry.ResolveMacroDomain(norm, intentPayload?.Category);
+        // 4.5. Katalog Modu / Tüm Menü / Bütün Kategori Tespiti
+        bool isBrowseAllGeneral =
+            (intent == "browse_all" && string.IsNullOrWhiteSpace(intentPayload?.Category)) ||
+            norm.Contains("tum menu") || norm.Contains("bütün menu") || norm.Contains("butun menu") ||
+            norm.Contains("menude ne var") || norm.Contains("menuyu goster") || norm.Contains("her seyi goster") ||
+            norm.Contains("herseyi goster") || norm.Contains("butun lezzetler") || norm.Contains("tum lezzetler") ||
+            norm.Contains("tum urunler") || norm.Contains("butun urunler") || norm.Contains("hepsini goster") ||
+            norm == "menu" || norm == "menü";
 
-        _logger.LogInformation(">>> [INTENT DETAILS] Makro Alan: '{MacroDomain}', Fiyat Tercihi: '{PricePref}', MaxFiyat: {MaxPrice}, MinFiyat: {MinPrice}",
-            macroDomain?.ToString() ?? "Genel (Tümü)", pricePreference, maxPrice, minPrice);
+        bool isBrowseAllCategory =
+            (intent == "browse_all" && !string.IsNullOrWhiteSpace(intentPayload?.Category)) ||
+            norm.Contains("tum kahve") || norm.Contains("butun kahve") ||
+            norm.Contains("tum tatli") || norm.Contains("butun tatli") ||
+            norm.Contains("tum icecek") || norm.Contains("butun icecek") ||
+            norm.Contains("tum kahvalti") || norm.Contains("butun kahvalti") || norm.Contains("her kahvalti") ||
+            norm.Contains("tum mutfak") || norm.Contains("tum yemek") || norm.Contains("butun yemek") ||
+            norm.Contains("tum atistir") || norm.Contains("butun atistir");
+
+        bool isBrowseAll = isBrowseAllGeneral || isBrowseAllCategory;
+
+        // 5. Macro-Domain Tespiti (Katman 1: Kapsam ve Etki Alanı İzolasyonu)
+        MacroDomain? macroDomain = null;
+        if (!isBrowseAllGeneral)
+        {
+            macroDomain = _taxonomyRegistry.ResolveMacroDomain(norm, intentPayload?.Category);
+        }
+
+        _logger.LogInformation(">>> [INTENT DETAILS] Makro Alan: '{MacroDomain}', Katalog Modu: {IsBrowseAll}, Fiyat Tercihi: '{PricePref}', MaxFiyat: {MaxPrice}, MinFiyat: {MinPrice}",
+            macroDomain?.ToString() ?? "Genel (Tümü)", isBrowseAll, pricePreference, maxPrice, minPrice);
 
         // 6. Veritabanından Category ve Tags ilişkileriyle birlikte aktif ürünleri çek
         var baseQuery = _dbContext.Products
@@ -218,13 +242,14 @@ public class MenuService : IMenuService
         var pipeline = new MenuSearchPipeline(_taxonomyRegistry, _logger);
         var searchContext = new MenuSearchPipeline.SearchContext(
             NormalizedQuery: norm,
-            MacroDomain: macroDomain,
-            AiCategory: intentPayload?.Category,
+            MacroDomain: isBrowseAllGeneral ? null : macroDomain,
+            AiCategory: isBrowseAllGeneral ? null : intentPayload?.Category,
             ExcludeTags: intentPayload?.ExcludeTags ?? new List<string>(),
             SearchKeywords: intentPayload?.SearchKeywords ?? new List<string>(),
             PricePreference: pricePreference,
             MaxPrice: maxPrice,
-            MinPrice: minPrice
+            MinPrice: minPrice,
+            IsBrowseAll: isBrowseAll
         );
 
         var filtered = pipeline.Execute(allAvailable, searchContext);
@@ -234,6 +259,23 @@ public class MenuService : IMenuService
         if (filtered.Count == 0)
         {
             finalMessage = "Belirttiğiniz kriterlere veya fiyat aralığına uygun ürün bulunamadı. Farklı bir seçenek denemek ister misiniz?";
+        }
+        else if (isBrowseAllGeneral)
+        {
+            finalMessage = "Menümüzdeki tüm lezzetleri sizin için listeledim:";
+        }
+        else if (isBrowseAllCategory)
+        {
+            if (macroDomain == MacroDomain.BeverageCoffee)
+                finalMessage = "Tüm kahve alternatiflerimiz listelendi:";
+            else if (macroDomain == MacroDomain.FoodDessert)
+                finalMessage = "Tüm tatlı alternatiflerimiz listelendi:";
+            else if (macroDomain == MacroDomain.FoodKitchen)
+                finalMessage = "Tüm kahvaltılık ve mutfak lezzetlerimiz listelendi:";
+            else if (macroDomain == MacroDomain.BeverageOther)
+                finalMessage = "Tüm soğuk içecek alternatiflerimiz listelendi:";
+            else
+                finalMessage = "Tüm seçeneklerimiz listelendi:";
         }
         else
         {

@@ -28,7 +28,8 @@ public class MenuSearchPipeline
         List<string> SearchKeywords,
         string PricePreference,
         decimal? MaxPrice,
-        decimal? MinPrice
+        decimal? MinPrice,
+        bool IsBrowseAll = false
     );
 
     public MenuSearchPipeline(ITaxonomyRegistry taxonomyRegistry, ILogger logger)
@@ -196,8 +197,29 @@ public class MenuSearchPipeline
 
         // =========================================================================
         // AŞAMA 4: RELEVANCE SCORING & SORTING (Puanlama ve Sıralama)
-        // Score = (İsim Eşleşmesi * 3) + (Nitelik/Etiket Eşleşmesi * 2) + (Açıklama Eşleşmesi * 1)
         // =========================================================================
+        // Katalog Modu: Tüm Menü veya Bütün Kategori Sorgularında tüm havuz eksiksiz döndürülür
+        if (context.IsBrowseAll)
+        {
+            _logger.LogInformation(">>> [PIPELINE: STAGE 4] Katalog Modu (IsBrowseAll = true). {Count} ürün eksiksiz olarak menü akışında sunuluyor.", candidates.Count);
+
+            if (context.PricePreference == "cheap")
+            {
+                return candidates.OrderBy(p => p.Price).ToList();
+            }
+            if (context.PricePreference == "expensive")
+            {
+                return candidates.OrderByDescending(p => p.Price).ToList();
+            }
+
+            // Doğal menü katalog düzeni: Kategoriye göre grupla, ardından fiyata göre sırala
+            return candidates
+                .OrderBy(p => p.Category?.Name ?? string.Empty)
+                .ThenBy(p => p.Price)
+                .ToList();
+        }
+
+        // Score = (İsim Eşleşmesi * 3) + (Nitelik/Etiket Eşleşmesi * 2) + (Açıklama Eşleşmesi * 1)
         var queryTokens = q.Split(' ', StringSplitOptions.RemoveEmptyEntries)
             .Where(t => t.Length > 2)
             .ToList();

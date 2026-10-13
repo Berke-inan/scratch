@@ -33,29 +33,36 @@ export function ChatMessageItem({ message, theme, userQuery = "" }: ChatMessageI
     setTimeout(() => setIsCopied(false), 2000)
   }
 
-  // Micro-List Rows & Bottom Sheet Renderer (Akıcı sıralama + Bottom Sheet)
+  const INITIAL_VISIBLE_COUNT = 6
+
+  // Micro-List Rows & Bottom Sheet Renderer (Ekrana sığan kadar listeleme + Dinamik buton)
   const renderProductMicroList = () => {
     if (!message.products || message.products.length === 0) return null
+
+    const totalCount = message.products.length
+    const visibleProducts = message.products.slice(0, INITIAL_VISIBLE_COUNT)
+    const remainingCount = totalCount - visibleProducts.length
+    const hasRemaining = remainingCount > 0
 
     return (
       <div className="w-full mt-2.5 space-y-2">
         {/* Eşleşen Menü Lezzetleri Başlığı (Akıllı Scroll Hedefi) */}
         <div
           data-scroll-target="matched-products-header"
-          className="text-[11px] font-bold text-neutral-600 dark:text-neutral-300 uppercase tracking-wider px-1 flex items-center justify-between scroll-mt-14"
+          className="text-[11px] font-bold text-neutral-600 dark:text-neutral-300 uppercase tracking-wider px-1 flex items-center justify-between scroll-mt-2 sm:scroll-mt-3"
         >
           <div className="flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-            <span>EŞLEŞEN MENÜ LEZZETLERİ ({message.products.length})</span>
+            <span>• EŞLEŞEN MENÜ LEZZETLERİ ({totalCount})</span>
           </div>
           <span className="text-[10px] text-amber-600 dark:text-amber-400 font-normal lowercase tracking-normal">
             Detay için tıkla
           </span>
         </div>
 
-        {/* Akıcı Kompakt Satırlar (Tüm Eşleşen Ürünler) */}
+        {/* Ekrana Sığan Kompakt Satırlar (Maksimum 6 Ürün) */}
         <div className="space-y-1.5">
-          {message.products.map((product) => (
+          {visibleProducts.map((product) => (
             <CompactProductRow
               key={product.id}
               product={product}
@@ -68,16 +75,19 @@ export function ChatMessageItem({ message, theme, userQuery = "" }: ChatMessageI
           ))}
         </div>
 
-        {/* Listenin En Altı: Şık Aksiyon Butonu */}
+        {/* Listenin En Altı (7. Slot): Dinamik Kalan Ürün Sayacı ve Detay Butonu */}
         <button
           onClick={() => {
             setSelectedProductId(null)
             setIsSheetOpen(true)
           }}
-          className="w-full h-10 mt-1 flex items-center justify-center gap-2 text-xs font-semibold text-amber-700 dark:text-amber-300 bg-amber-50/90 dark:bg-amber-950/40 hover:bg-amber-100 dark:hover:bg-amber-900/50 border border-amber-200/90 dark:border-amber-800/80 rounded-xl transition-all cursor-pointer shadow-2xs group"
+          className="w-full h-10 mt-1 flex items-center justify-center gap-1.5 text-xs font-semibold text-amber-700 dark:text-amber-300 bg-amber-50/90 dark:bg-amber-950/40 hover:bg-amber-100 dark:hover:bg-amber-900/50 border border-amber-200/90 dark:border-amber-800/80 rounded-xl transition-all cursor-pointer shadow-2xs group"
         >
-          <span className="text-sm">📋</span>
-          <span>Tüm Menüde İncele / Detayları Aç</span>
+          <span>
+            {hasRemaining
+              ? `Detayları ve diğer ürünleri incele (+${remainingCount})`
+              : "Detayları incele"}
+          </span>
           <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
         </button>
 

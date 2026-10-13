@@ -232,8 +232,133 @@ export class ApiClient {
         }
       }
 
-      // Smart client-side fallback matching with Hard Category Boundary
+      // 1. Katalog Modu / Tüm Menü / Bütün Kategori Sorguları (browse_all)
       let matched = [...FALLBACK_PRODUCTS]
+
+      const isBrowseAllGeneral =
+        lower.includes("tüm menü") ||
+        lower.includes("tum menu") ||
+        lower.includes("bütün menü") ||
+        lower.includes("butun menu") ||
+        lower.includes("menüde ne var") ||
+        lower.includes("menude ne var") ||
+        lower.includes("her şeyi göster") ||
+        lower.includes("her seyi goster") ||
+        lower.includes("herseyi goster") ||
+        lower.includes("bütün lezzetler") ||
+        lower.includes("butun lezzetler") ||
+        lower.includes("tüm lezzetler") ||
+        lower.includes("tum lezzetler") ||
+        lower.includes("tüm ürünler") ||
+        lower.includes("tum urunler") ||
+        lower.includes("hepsini göster") ||
+        lower.includes("hepsini goster") ||
+        lower === "menü" ||
+        lower === "menu"
+
+      const isBrowseAllCoffee =
+        lower.includes("tüm kahve") ||
+        lower.includes("tum kahve") ||
+        lower.includes("bütün kahve") ||
+        lower.includes("butun kahve")
+
+      const isBrowseAllDessert =
+        lower.includes("tüm tatlı") ||
+        lower.includes("tum tatli") ||
+        lower.includes("bütün tatlı") ||
+        lower.includes("butun tatli")
+
+      const isBrowseAllFood =
+        lower.includes("tüm kahvaltı") ||
+        lower.includes("tum kahvalti") ||
+        lower.includes("her kahvaltı") ||
+        lower.includes("her kahvalti") ||
+        lower.includes("tüm mutfak") ||
+        lower.includes("tüm yemek") ||
+        lower.includes("bütün yemek") ||
+        lower.includes("tüm atıştırmalık")
+
+      const isBrowseAllDrinks =
+        lower.includes("tüm içecek") ||
+        lower.includes("tum icecek") ||
+        lower.includes("bütün içecek") ||
+        lower.includes("butun icecek")
+
+      if (isBrowseAllGeneral) {
+        return {
+          message: "Menümüzdeki tüm lezzetleri sizin için listeledim:",
+          products: matched.map((p) => ({
+            ...p,
+            tags: [...p.tags].sort(
+              (a, b) =>
+                calculateTagScore(b, trimmedQuery, p.categoryName) -
+                calculateTagScore(a, trimmedQuery, p.categoryName)
+            ),
+          })),
+        }
+      }
+
+      if (isBrowseAllCoffee) {
+        const coffeeProducts = matched.filter(
+          (p) => p.categoryName === "Sıcak Kahveler" || p.categoryName === "Soğuk Kahveler"
+        )
+        return {
+          message: "Tüm kahve alternatiflerimiz listelendi:",
+          products: coffeeProducts.map((p) => ({
+            ...p,
+            tags: [...p.tags].sort(
+              (a, b) =>
+                calculateTagScore(b, trimmedQuery, p.categoryName) -
+                calculateTagScore(a, trimmedQuery, p.categoryName)
+            ),
+          })),
+        }
+      }
+
+      if (isBrowseAllDessert) {
+        const dessertProducts = matched.filter((p) => p.categoryName.includes("Tatlı"))
+        return {
+          message: "Tüm tatlı alternatiflerimiz listelendi:",
+          products: dessertProducts.map((p) => ({
+            ...p,
+            tags: [...p.tags].sort(
+              (a, b) =>
+                calculateTagScore(b, trimmedQuery, p.categoryName) -
+                calculateTagScore(a, trimmedQuery, p.categoryName)
+            ),
+          })),
+        }
+      }
+
+      if (isBrowseAllFood) {
+        const foodProducts = matched.filter((p) => p.categoryName.includes("Atıştırmalık"))
+        return {
+          message: "Tüm kahvaltılık ve mutfak lezzetlerimiz listelendi:",
+          products: foodProducts.map((p) => ({
+            ...p,
+            tags: [...p.tags].sort(
+              (a, b) =>
+                calculateTagScore(b, trimmedQuery, p.categoryName) -
+                calculateTagScore(a, trimmedQuery, p.categoryName)
+            ),
+          })),
+        }
+      }
+
+      if (isBrowseAllDrinks) {
+        const drinkProducts = matched.filter((p) => p.categoryName.includes("Soğuk İçecek"))
+        return {
+          message: "Tüm soğuk içecek alternatiflerimiz listelendi:",
+          products: drinkProducts.map((p) => ({
+            ...p,
+            tags: [...p.tags].sort(
+              (a, b) =>
+                calculateTagScore(b, trimmedQuery, p.categoryName) -
+                calculateTagScore(a, trimmedQuery, p.categoryName)
+            ),
+          })),
+        }
+      }
 
       const isCoffeeQuery =
         lower.includes("kahve") ||

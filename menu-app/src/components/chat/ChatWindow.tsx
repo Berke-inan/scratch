@@ -18,23 +18,28 @@ export function ChatWindow() {
     const lastMessage = messages[messages.length - 1]
 
     if (lastMessage?.sender === "assistant") {
-      // AI yanıtı tamamlandığında "EŞLEŞEN MENÜ LEZZETLERİ" başlığına yumuşakça odaklan
+      // AI yanıtı tamamlandığında akıllı scroll (Fotoğraf 2 -> Fotoğraf 3 geçişi)
       const timer = setTimeout(() => {
-        const headerEl = lastAiMessageRef.current?.querySelector<HTMLElement>(
-          '[data-scroll-target="matched-products-header"]'
-        )
-        if (headerEl) {
-          headerEl.scrollIntoView({
-            behavior: "smooth",
-            block: "start",
-          })
-        } else {
-          lastAiMessageRef.current?.scrollIntoView({
-            behavior: "smooth",
-            block: "start",
-          })
+        // Eğer 3 veya daha fazla ürün varsa doğrudan "EŞLEŞEN MENÜ LEZZETLERİ" başlığına hizala
+        if (lastMessage.products && lastMessage.products.length > 2) {
+          const headerEl = lastAiMessageRef.current?.querySelector<HTMLElement>(
+            '[data-scroll-target="matched-products-header"]'
+          )
+          if (headerEl) {
+            headerEl.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+            })
+            return
+          }
         }
-      }, 60)
+
+        // 1-2 ürün varsa veya metin mesajı ise mesajın tepesine yumuşakça odaklan
+        lastAiMessageRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        })
+      }, 70)
 
       return () => clearTimeout(timer)
     } else {
@@ -152,8 +157,8 @@ export function ChatWindow() {
       {/* Platform Header */}
       {renderHeader()}
 
-      {/* Messages Scroll Area with scroll-pt-16 padding */}
-      <div className="flex-1 overflow-y-auto px-3 sm:px-4 py-3 space-y-1 scroll-pt-16">
+      {/* Messages Scroll Area with compact top scroll-padding */}
+      <div className="flex-1 overflow-y-auto px-3 sm:px-4 py-3 space-y-1 scroll-pt-2">
         {messages.map((msg, index) => {
           const isLatestAiMessage = index === lastAiMessageIndex
 
